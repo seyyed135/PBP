@@ -13,7 +13,6 @@ public class Contact
     public string Name { get; set; } = string.Empty;
 
     [Required]
-    [RegularExpression(@"^\d{11}$", ErrorMessage = "شماره همراه باید ۱۱ رقمی باشد.")]
     public string PhoneNumber { get; set; } = string.Empty;
 
     public DateTime? BirthDate { get; set; }

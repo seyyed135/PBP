@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Contact>
+
+@{
+    ViewData["Title"] = "لیست مخاطبان";
+}
+
+<partial name="_Notification" />
+
+<h1>لیست مخاطبان</h1>
+
+<p>
+    <a asp-action="Create">ایجاد مخاطب</a>
+</p>
+
+<form method="get">
+    <div class="form-group">
+        <input type="text" name="searchName" placeholder="جستجوی نام" class="form-control" />
+        <input type="text" name="searchPhone" placeholder="جستجوی شماره" class="form-control" />
+        <input type="date" name="startDate" laceholder="از تارخ" class="form-control" />
+        <input type="date" name="endDate" laceholder="تا تاریخ" class="form-control" />
+        <button type="submit" class="btn btn-primary">جستجو</button>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>نام</th>
+            <th>شماره همراه</th>
+            <th>تاریخ تولد</th>
+            <th>تصویر</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.PhoneNumber</td>
+                <td>@item.BirthDate?.ToString("yyyy/MM/dd")</td>
+                <td>
+                    @if (item.Image != null)
+                    {
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Image.Data)" width="50" />
+                    }
+                </td>
+                <td>
+                    <a asp-action="Create" asp-route-id="@item.Id" class="btn btn-sm btn-warning">ویرایش</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">حذف</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

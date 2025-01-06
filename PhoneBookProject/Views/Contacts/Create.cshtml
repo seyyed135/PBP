@@ -1,0 +1,64 @@
+﻿@model ContactViewModel
+
+@{
+    if (!Model.IsEdit)
+    {
+        ViewData["Title"] = "ایجاد مخاطب جدید";
+        <h1>ایجاد مخاطب جدید</h1>
+    }
+    else
+    {
+        ViewData["Title"] = "ویرایش مخاطب";
+        <h1>ویرایش مخاطب</h1>
+    }
+}
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data" method="post">
+            <div asp-validation-summary="All"></div>
+            <div class="form-group">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BirthDate"></label>
+                <input asp-for="BirthDate" id="BirthDate" class="form-control" type="text" placeholder="تاریخ تولد را انتخاب کنید" />
+                <span asp-validation-for="BirthDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Image"></label>
+                <input asp-for="Image" class="form-control" />
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">ذخیره</button>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">بازگشت به لیست</a>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function() {
+                $("#BirthDate").pDatepicker({
+                initialValue: false,
+                format: "YYYY/MM/DD",
+                autoClose: true,
+            });
+        });
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

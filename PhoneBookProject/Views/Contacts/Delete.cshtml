@@ -1,0 +1,74 @@
+﻿@model Contact
+
+@{
+    ViewData["Title"] = "حذف مخاطب";
+}
+
+<h1>حذف مخاطب</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            نام
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Name
+        </dd>
+        <dt class="col-sm-2">
+            شماره تلفن
+        </dt>
+        <dd class="col-sm-10">
+            @Model.PhoneNumber
+        </dd>
+        <dt class="col-sm-2">
+            تاریخ تولد
+        </dt>
+        <dd class="col-sm-10">
+            @Model.BirthDate?.ToString("yyyy/MM/dd")
+        </dd>
+        <dt class="col-sm-2">
+            عکس
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.Image != null)
+            {
+                <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Image.Data)" width="50" />
+            }
+        </dd>
+    </dl>
+
+    <button id="deleteButton" class="btn btn-danger">
+        حذف
+    </button>|
+    <a asp-action="Index">بازگشت به لیست</a>
+
+    <form asp-action="Delete" id="deleteForm" method="post">
+        <input type="hidden" asp-for="Id" />
+        @Html.AntiForgeryToken()
+    </form>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#deleteButton").on("click", function () {
+                Swal.fire({
+                    title: 'آیا مطمئن هستید؟',
+                    text: "این عمل قابل بازگشت نیست!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'بله، حذف کن',
+                    cancelButtonText: 'لغو'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $("#deleteForm").submit();
+                    }
+                });
+            });
+        });
+    </script>
+}
