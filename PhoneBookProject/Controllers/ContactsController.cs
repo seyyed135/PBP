@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PBP.Data;
 using PBP.Models;
 using PBP.ViewModels;
+using System.Text.RegularExpressions;
 
 namespace PBP.Controllers;
 
@@ -12,23 +13,45 @@ public class ContactsController(ApplicationDbContext context) : Controller
 
     #region See Contacts
 
-    public async Task<IActionResult> Index(string searchName, string searchPhone, DateTime? startDate, DateTime? endDate)
+    public async Task<IActionResult> Index(string? searchName, string? searchPhone, string? startDate, string? endDate)
     {
+        if (!string.IsNullOrEmpty(searchPhone) && !Regex.IsMatch(searchPhone, @"^\d{11}$"))
+        {
+            ModelState.AddModelError("default", "شماره همراه باید ۱۱ رقمی باشد");
+            return View();
+        }
+
+        if (!string.IsNullOrEmpty(startDate) && !Regex.IsMatch(startDate, @"^([۰-۹]{4})/([۰-۹]{2})/([۰-۹]{2})$"))
+        {
+            ModelState.AddModelError("default", "تاریخ باید به صورت شمسی و فرمت YYYY/MM/DD باشد.");
+            return View();
+        }
+
+        if (!string.IsNullOrEmpty(endDate) && !Regex.IsMatch(endDate, @"^([۰-۹]{4})/([۰-۹]{2})/([۰-۹]{2})$"))
+        {
+            ModelState.AddModelError("default", "تاریخ باید به صورت شمسی و فرمت YYYY/MM/DD باشد.");
+            return View();
+        }
+
+        var viewModel = new ContactViewModel();
+        var gregorianStartDate = viewModel.PersianStringToGregorianDate(startDate);
+        var gregorianEndDate = viewModel.PersianStringToGregorianDate(endDate);
+
         var query = _context.Set<Contact>()
-                            .Include(c => c.Image)
-                            .AsQueryable();
+                                .Include(c => c.Image)
+                                .AsQueryable();
 
         if (!string.IsNullOrEmpty(searchName))
-            query = query.Where(c => c.Name.Contains(searchName));
+            query = query.Where(c => c.Name.Contains(searchName.Trim()));
 
         if (!string.IsNullOrEmpty(searchPhone))
-            query = query.Where(c => c.PhoneNumber.Contains(searchPhone));
+            query = query.Where(c => c.PhoneNumber.Contains(searchPhone.Trim()));
 
-        if (startDate.HasValue)
-            query = query.Where(c => c.BirthDate >= startDate.Value);
+        if (gregorianStartDate.HasValue)
+            query = query.Where(c => c.BirthDate >= gregorianStartDate.Value.Date);
 
-        if (endDate.HasValue)
-            query = query.Where(c => c.BirthDate <= endDate.Value);
+        if (gregorianEndDate.HasValue)
+            query = query.Where(c => c.BirthDate <= gregorianEndDate.Value.Date);
 
         return View(await query.ToListAsync());
     }

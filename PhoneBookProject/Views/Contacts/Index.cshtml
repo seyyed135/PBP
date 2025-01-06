@@ -16,6 +16,7 @@
 
     <div class="row mt-5">
         <form method="get" class="d-flex align-items-center gap-3">
+            <div asp-validation-summary="All"></div>
             <div class="form-group">
                 <input type="text" name="searchName" placeholder="جستجوی نام" class="form-control" />
             </div>
@@ -23,10 +24,10 @@
                 <input type="text" name="searchPhone" placeholder="جستجوی شماره" class="form-control" />
             </div>
             <div class="form-group">
-                <input type="date" name="startDate" placeholder="از تاریخ" class="form-control" />
+                <input type="text" name="startDate" id="startDate" placeholder="از تاریخ" class="form-control" />
             </div>
             <div class="form-group">
-                <input type="date" name="endDate" placeholder="تا تاریخ" class="form-control" />
+                <input type="text" name="endDate" id="endDate" placeholder="تا تاریخ" class="form-control" />
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">
@@ -54,24 +55,44 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @if (Model != null)
             {
-                <tr>
-                    <td>@item.Name</td>
-                    <td>@item.PhoneNumber</td>
-                    <td>@item.BirthDate?.ToString("yyyy/MM/dd")</td>
-                    <td>
-                        @if (item.Image != null)
-                        {
-                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Image.Data)" width="50" />
-                        }
-                    </td>
-                    <td class="text-end">
-                        <a asp-action="Create" asp-route-id="@item.Id" class="btn btn-sm btn-warning">ویرایش</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">حذف</a>
-                    </td>
-                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>@item.BirthDate?.ToString("yyyy/MM/dd")</td>
+                        <td>
+                            @if (item.Image != null)
+                            {
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Image.Data)" width="50" />
+                            }
+                        </td>
+                        <td class="text-end">
+                            <a asp-action="Create" asp-route-id="@item.Id" class="btn btn-sm btn-warning">ویرایش</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">حذف</a>
+                        </td>
+                    </tr>
+                }
             }
         </tbody>
     </table>
 </div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function() {
+                $("#startDate").pDatepicker({
+                initialValue: false,
+                format: "YYYY/MM/DD",
+                autoClose: true,
+            });
+                 $("#endDate").pDatepicker({
+                initialValue: false,
+                format: "YYYY/MM/DD",
+                autoClose: true,
+            });
+        });
+    </script>
+}

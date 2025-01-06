@@ -72,7 +72,7 @@ public class ContactViewModel
         };
     }
 
-    DateTime? PersianStringToGregorianDate(string? persianDate)
+    internal DateTime? PersianStringToGregorianDate(string? persianDate)
     {
         if (string.IsNullOrEmpty(persianDate))
             return null;
