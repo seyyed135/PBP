@@ -1,55 +1,77 @@
 ﻿@model IEnumerable<Contact>
 
 @{
-    ViewData["Title"] = "لیست مخاطبان";
+    ViewData["Title"] = "لیست مخاطبین";
 }
 
 <partial name="_Notification" />
 
-<h1>لیست مخاطبان</h1>
+<div class="Container p-3">
 
-<p>
-    <a asp-action="Create">ایجاد مخاطب</a>
-</p>
+    <h1 class="mt-4">
+        لیست مخاطبین
+        <i class="bi bi-person-lines-fill"></i>
+    </h1>
+    <hr />
 
-<form method="get">
-    <div class="form-group">
-        <input type="text" name="searchName" placeholder="جستجوی نام" class="form-control" />
-        <input type="text" name="searchPhone" placeholder="جستجوی شماره" class="form-control" />
-        <input type="date" name="startDate" laceholder="از تارخ" class="form-control" />
-        <input type="date" name="endDate" laceholder="تا تاریخ" class="form-control" />
-        <button type="submit" class="btn btn-primary">جستجو</button>
+    <div class="row mt-5">
+        <form method="get" class="d-flex align-items-center gap-3">
+            <div class="form-group">
+                <input type="text" name="searchName" placeholder="جستجوی نام" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="text" name="searchPhone" placeholder="جستجوی شماره" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="date" name="startDate" placeholder="از تاریخ" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="date" name="endDate" placeholder="تا تاریخ" class="form-control" />
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">
+                    جستجو
+                    &nbsp; <i class="bi bi-search"></i>
+                </button>
+            </div>
+            <div class="form-group">
+                <a class="btn btn-success no-underline" asp-controller="Contacts" asp-action="Index">
+                    بازنشانی
+                    &nbsp; <i class="bi bi-arrow-clockwise"></i>
+                </a>
+            </div>
+        </form>
     </div>
-</form>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>نام</th>
-            <th>شماره همراه</th>
-            <th>تاریخ تولد</th>
-            <th>تصویر</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Name</td>
-                <td>@item.PhoneNumber</td>
-                <td>@item.BirthDate?.ToString("yyyy/MM/dd")</td>
-                <td>
-                    @if (item.Image != null)
-                    {
-                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Image.Data)" width="50" />
-                    }
-                </td>
-                <td>
-                    <a asp-action="Create" asp-route-id="@item.Id" class="btn btn-sm btn-warning">ویرایش</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">حذف</a>
-                </td>
+    <table class="table table-striped mt-5">
+        <thead>
+            <tr class="table-info">
+                <th>نام</th>
+                <th>شماره همراه</th>
+                <th>تاریخ تولد</th>
+                <th>تصویر</th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.PhoneNumber</td>
+                    <td>@item.BirthDate?.ToString("yyyy/MM/dd")</td>
+                    <td>
+                        @if (item.Image != null)
+                        {
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Image.Data)" width="50" />
+                        }
+                    </td>
+                    <td class="text-end">
+                        <a asp-action="Create" asp-route-id="@item.Id" class="btn btn-sm btn-warning">ویرایش</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">حذف</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,50 +1,60 @@
 ﻿@model ContactViewModel
 
-@{
-    if (!Model.IsEdit)
-    {
-        ViewData["Title"] = "ایجاد مخاطب جدید";
-        <h1>ایجاد مخاطب جدید</h1>
-    }
-    else
-    {
-        ViewData["Title"] = "ویرایش مخاطب";
-        <h1>ویرایش مخاطب</h1>
-    }
-}
+<div class="Container p-3">
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" enctype="multipart/form-data" method="post">
-            <div asp-validation-summary="All"></div>
-            <div class="form-group">
-                <label asp-for="Name"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PhoneNumber"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BirthDate"></label>
-                <input asp-for="BirthDate" id="BirthDate" class="form-control" type="text" placeholder="تاریخ تولد را انتخاب کنید" />
-                <span asp-validation-for="BirthDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Image"></label>
-                <input asp-for="Image" class="form-control" />
-                <span asp-validation-for="Image" class="text-danger"></span>
-            </div>
-            <button type="submit" class="btn btn-primary">ذخیره</button>
-        </form>
+    @{
+        if (!Model.IsEdit)
+        {
+            ViewData["Title"] = "ایجاد مخاطب جدید";
+            <h1 class="mt-4">ایجاد مخاطب جدید</h1>
+        }
+        else
+        {
+            ViewData["Title"] = "ویرایش مخاطب";
+            <h1 class="mt-4">ویرایش مخاطب</h1>
+        }
+    }
+
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create" enctype="multipart/form-data" method="post">
+                <div asp-validation-summary="All"></div>
+                <div class="form-group">
+                    <label asp-for="Name" class="form-label mt-4"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PhoneNumber" class="form-label mt-4"></label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BirthDate" class="form-label mt-4"></label>
+                    <input asp-for="BirthDate" id="BirthDate" class="form-control" type="text" placeholder="تاریخ تولد را انتخاب کنید" />
+                    <span asp-validation-for="BirthDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Image" class="form-label mt-4"></label>
+                    <input asp-for="Image" class="form-control" />
+                    <span asp-validation-for="Image" class="text-danger"></span>
+                </div>
+                <div class="col-md-5">
+                    <button type="submit" class="btn btn-primary mt-4 w-100">
+                        ذخیره
+                        &nbsp; <i class="bi bi-floppy2"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">بازگشت به لیست</a>
+    <div class="mt-4">
+        <a class="btn btn-success no-underline" asp-action="Index">
+            بازگشت به لیست
+            &nbsp; <i class="bi bi-person-lines-fill"></i>
+        </a>
+    </div>
 </div>
 
 @section Scripts {
