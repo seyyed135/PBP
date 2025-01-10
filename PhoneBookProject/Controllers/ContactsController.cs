@@ -31,6 +31,12 @@ public class ContactsController(ApplicationDbContext context) : Controller
         var gregorianStartDate = viewModel.PersianStringToGregorianDate(startDate);
         var gregorianEndDate = viewModel.PersianStringToGregorianDate(endDate);
 
+        if (gregorianStartDate > DateTime.UtcNow || gregorianEndDate > DateTime.UtcNow)
+        {
+            ModelState.AddModelError("default", "تاریخ نمیتواند برای آینده باشد");
+            return View();
+        }
+
         if (gregorianStartDate >= gregorianEndDate)
         {
             ModelState.AddModelError("default", @"فیلد ""از تاریخ"" نمی‌تواند بزرگتر یا مساوی با فیلد ""تا تاریخ"" باشد");
