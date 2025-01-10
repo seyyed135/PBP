@@ -15,12 +15,6 @@ public class ContactsController(ApplicationDbContext context) : Controller
 
     public async Task<IActionResult> Index(string? searchName, string? searchPhone, string? startDate, string? endDate)
     {
-        if (!string.IsNullOrEmpty(searchPhone) && !Regex.IsMatch(searchPhone, @"^\d{11}$"))
-        {
-            ModelState.AddModelError("default", "شماره همراه باید ۱۱ رقمی باشد");
-            return View();
-        }
-
         if (!string.IsNullOrEmpty(startDate) && !Regex.IsMatch(startDate, @"^([۰-۹]{4})/([۰-۹]{2})/([۰-۹]{2})$"))
         {
             ModelState.AddModelError("default", "تاریخ باید به صورت شمسی و فرمت YYYY/MM/DD باشد.");
@@ -36,6 +30,12 @@ public class ContactsController(ApplicationDbContext context) : Controller
         var viewModel = new ContactViewModel();
         var gregorianStartDate = viewModel.PersianStringToGregorianDate(startDate);
         var gregorianEndDate = viewModel.PersianStringToGregorianDate(endDate);
+
+        if (gregorianStartDate >= gregorianEndDate)
+        {
+            ModelState.AddModelError("default", @"فیلد ""از تاریخ"" نمی‌تواند بزرگتر یا مساوی با فیلد ""تا تاریخ"" باشد");
+            return View();
+        }
 
         var query = _context.Set<Contact>()
                                 .Include(c => c.Image)
