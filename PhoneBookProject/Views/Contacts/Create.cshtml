@@ -26,12 +26,13 @@
         <div class="col-md-4">
             <form asp-action="Create" enctype="multipart/form-data" method="post">
                 <div class="form-group">
-                    <label asp-for="Name" class="form-label mt-4"></label>
+                    <label asp-for="Name" class="form-label mt-4 required-mark">
+                    </label>
                     <input asp-for="Name" class="form-control" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="PhoneNumber" class="form-label mt-4"></label>
+                    <label asp-for="PhoneNumber" class="form-label mt-4 required-mark"></label>
                     <input asp-for="PhoneNumber" class="form-control" />
                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                 </div>
