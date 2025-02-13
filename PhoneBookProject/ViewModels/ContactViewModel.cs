@@ -23,7 +23,8 @@ public class ContactViewModel
     public bool IsEdit => Id > 0;
 
     [Required(ErrorMessage = "لطفا نام را وارد کنید")]
-    [MaxLength(100)]
+    [MaxLength(100, ErrorMessage = "نام نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد")]
+    [MinLength(3, ErrorMessage = "نام باید حداقل ۳ کاراکتر باشد")]
     [DisplayName("نام")]
     public string Name { get; set; } = string.Empty;
 
