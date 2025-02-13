@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Contact>
+﻿@model SearchViewModel
 
 @{
     ViewData["Title"] = "لیست مخاطبین";
@@ -14,20 +14,33 @@
     </h1>
     <hr />
 
+    @if (ViewData.ModelState.ErrorCount > 0)
+    {
+        <div id="error-alert" class="alert alert-danger d-flex align-items-center p-3 rounded shadow-lg animate-fade-in">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <ul class="mb-0">
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            </ul>
+            <button type="button" class="btn-close ms-3 close-error-btn"></button>
+        </div>
+    }
+
     <div class="row mt-5">
         <form method="get" class="d-flex align-items-center gap-3">
-            <div asp-validation-summary="All"></div>
             <div class="form-group">
-                <input type="text" name="searchName" placeholder="جستجوی نام" class="form-control" />
+                <input asp-for="SearchName" class="form-control" placeholder="نام" />
             </div>
             <div class="form-group">
-                <input type="text" name="searchPhone" placeholder="جستجوی شماره" class="form-control" />
+                <input asp-for="SearchPhone" class="form-control" placeholder="شماره تلفن" />
             </div>
             <div class="form-group">
-                <input type="text" name="startDate" id="startDate" placeholder="از تاریخ" class="form-control" />
+                <input asp-for="StartDate" id="startDate" class="form-control" placeholder="از تاریخ" />
             </div>
             <div class="form-group">
-                <input type="text" name="endDate" id="endDate" placeholder="تا تاریخ" class="form-control" />
+                <input asp-for="EndDate" id="endDate" class="form-control" placeholder="تا تاریخ" />
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">
@@ -55,9 +68,9 @@
             </tr>
         </thead>
         <tbody>
-            @if (Model != null)
+            @if (Model.Contacts != null)
             {
-                @foreach (var item in Model)
+                @foreach (var item in Model.Contacts)
                 {
                     <tr>
                         <td>@item.Name</td>
@@ -92,6 +105,24 @@
                 initialValue: false,
                 format: "YYYY/MM/DD",
                 autoClose: true,
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            let errorAlert = $("#error-alert");
+            if (errorAlert.length) {
+                setTimeout(function () {
+                    errorAlert.fadeOut(300, function () {
+                        $(this).remove();
+                    });
+                }, 10000);
+            }
+            $(".close-error-btn").on("click", function () {
+                errorAlert.fadeOut(300, function () {
+                    $(this).remove();
+                });
             });
         });
     </script>

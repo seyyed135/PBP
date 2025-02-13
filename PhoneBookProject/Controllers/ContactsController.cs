@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using PBP.Data;
 using PBP.Models;
 using PBP.ViewModels;
-using System.Text.RegularExpressions;
 
 namespace PBP.Controllers;
 
@@ -13,47 +12,34 @@ public class ContactsController(ApplicationDbContext context) : Controller
 
     #region See Contacts
 
-    public async Task<IActionResult> Index(string? searchName, string? searchPhone, string? startDate, string? endDate)
+    public async Task<IActionResult> Index(SearchViewModel viewModel)
     {
-        if (!string.IsNullOrEmpty(searchPhone) && !Regex.IsMatch(searchPhone, @"^\d{11}$"))
+        if (ModelState.IsValid)
         {
-            ModelState.AddModelError("default", "شماره همراه باید ۱۱ رقمی باشد");
-            return View();
+            var contactViewModel = new ContactViewModel();
+            var gregorianStartDate = contactViewModel.PersianStringToGregorianDate(viewModel.StartDate);
+            var gregorianEndDate = contactViewModel.PersianStringToGregorianDate(viewModel.EndDate);
+
+            var query = _context.Set<Contact>()
+                                    .Include(c => c.Image)
+                                    .AsQueryable();
+
+            if (!string.IsNullOrEmpty(viewModel.SearchName))
+                query = query.Where(c => c.Name.Contains(viewModel.SearchName.Trim()));
+
+            if (!string.IsNullOrEmpty(viewModel.SearchPhone))
+                query = query.Where(c => c.PhoneNumber.Contains(viewModel.SearchPhone.Trim()));
+
+            if (gregorianStartDate.HasValue)
+                query = query.Where(c => c.BirthDate >= gregorianStartDate.Value.Date);
+
+            if (gregorianEndDate.HasValue)
+                query = query.Where(c => c.BirthDate <= gregorianEndDate.Value.Date);
+
+            viewModel.Contacts = await query.ToListAsync();
+            return View(viewModel);
         }
-
-        if (!string.IsNullOrEmpty(startDate) && !Regex.IsMatch(startDate, @"^([۰-۹]{4})/([۰-۹]{2})/([۰-۹]{2})$"))
-        {
-            ModelState.AddModelError("default", "تاریخ باید به صورت شمسی و فرمت YYYY/MM/DD باشد.");
-            return View();
-        }
-
-        if (!string.IsNullOrEmpty(endDate) && !Regex.IsMatch(endDate, @"^([۰-۹]{4})/([۰-۹]{2})/([۰-۹]{2})$"))
-        {
-            ModelState.AddModelError("default", "تاریخ باید به صورت شمسی و فرمت YYYY/MM/DD باشد.");
-            return View();
-        }
-
-        var viewModel = new ContactViewModel();
-        var gregorianStartDate = viewModel.PersianStringToGregorianDate(startDate);
-        var gregorianEndDate = viewModel.PersianStringToGregorianDate(endDate);
-
-        var query = _context.Set<Contact>()
-                                .Include(c => c.Image)
-                                .AsQueryable();
-
-        if (!string.IsNullOrEmpty(searchName))
-            query = query.Where(c => c.Name.Contains(searchName.Trim()));
-
-        if (!string.IsNullOrEmpty(searchPhone))
-            query = query.Where(c => c.PhoneNumber.Contains(searchPhone.Trim()));
-
-        if (gregorianStartDate.HasValue)
-            query = query.Where(c => c.BirthDate >= gregorianStartDate.Value.Date);
-
-        if (gregorianEndDate.HasValue)
-            query = query.Where(c => c.BirthDate <= gregorianEndDate.Value.Date);
-
-        return View(await query.ToListAsync());
+        return View(viewModel);
     }
 
     #endregion
