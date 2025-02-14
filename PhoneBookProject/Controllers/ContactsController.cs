@@ -1,14 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using PBP.Data;
+using PBP.Localization;
 using PBP.Models;
 using PBP.ViewModels;
 
 namespace PBP.Controllers;
 
-public class ContactsController(ApplicationDbContext context) : Controller
+public class ContactsController(ApplicationDbContext context, IStringLocalizer<SharedResource> localizer) : Controller
 {
     private readonly ApplicationDbContext _context = context;
+
+    private readonly IStringLocalizer<SharedResource> _localizer = localizer;
 
     #region See Contacts
 
