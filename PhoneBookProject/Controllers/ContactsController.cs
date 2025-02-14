@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
 using PBP.Data;
-using PBP.Localization;
 using PBP.Models;
 using PBP.ViewModels;
 

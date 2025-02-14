@@ -1,6 +1,4 @@
-﻿using PBP.Localization;
-using PBP.Models;
-using System.ComponentModel;
+﻿using PBP.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
