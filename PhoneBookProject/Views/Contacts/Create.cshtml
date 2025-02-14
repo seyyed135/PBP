@@ -5,7 +5,7 @@
     @{
         if (!Model.IsEdit)
         {
-            ViewData["Title"] = "ایجاد مخاطب جدید";
+            ViewData["Title"] = @Localizer["AddNewContact"];
             <h1 class="mt-4">
                 @Localizer["AddNewContact"]
                 &nbsp; <i class="bi bi-person-plus-fill"></i>
@@ -13,7 +13,7 @@
         }
         else
         {
-            ViewData["Title"] = "ویرایش مخاطب";
+            ViewData["Title"] = @Localizer["EditContact"];
             <h1 class="mt-4">
                 @Localizer["EditContact"]
                 &nbsp; <i class="bi bi-pencil-square"></i>
@@ -27,28 +27,35 @@
             <form asp-action="Create" enctype="multipart/form-data" method="post">
                 <div class="form-group">
                     <label asp-for="Name" class="form-label mt-4 required-mark">
+                        @Localizer["Name"]
                     </label>
                     <input asp-for="Name" class="form-control" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="PhoneNumber" class="form-label mt-4 required-mark"></label>
+                    <label asp-for="PhoneNumber" class="form-label mt-4 required-mark">
+                        @Localizer["PhoneNumber"]
+                    </label>
                     <input asp-for="PhoneNumber" class="form-control" />
                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="BirthDate" class="form-label mt-4"></label>
+                    <label asp-for="BirthDate" class="form-label mt-4">
+                        @Localizer["BirthDate"]
+                    </label>
                     <input asp-for="BirthDate" id="BirthDate" class="form-control" type="text" placeholder="تاریخ تولد را انتخاب کنید" />
                     <span asp-validation-for="BirthDate" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Image" class="form-label mt-4"></label>
+                    <label asp-for="Image" class="form-label mt-4">
+                        @Localizer["Image"]
+                    </label>
                     <input asp-for="Image" class="form-control" />
                     <span asp-validation-for="Image" class="text-danger"></span>
                 </div>
                 <div class="col-md-5">
                     <button type="submit" class="btn btn-primary mt-4 w-100">
-                        ذخیره
+                        @Localizer["Save"]
                         &nbsp; <i class="bi bi-floppy2"></i>
                     </button>
                 </div>
@@ -57,7 +64,7 @@
     </div>
     <div class="mt-4">
         <a class="btn btn-success no-underline" asp-action="Index">
-            بازگشت به لیست
+            @Localizer["BackToList"]
             &nbsp; <i class="bi bi-person-lines-fill"></i>
         </a>
     </div>

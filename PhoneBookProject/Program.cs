@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using PBP.Data;
@@ -9,19 +10,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews()
     .AddViewLocalization()
+    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
     .AddDataAnnotationsLocalization();
 
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
-    var supportedCultures = new[]
-    {
-        new CultureInfo("fa"),
-        new CultureInfo("en")
-    };
-
-    options.DefaultRequestCulture = new RequestCulture("fa"); 
+    var supportedCultures = new[] { new CultureInfo("fa") };
+    options.DefaultRequestCulture = new RequestCulture("fa");
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
 });

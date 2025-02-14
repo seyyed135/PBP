@@ -1,7 +1,7 @@
 ﻿@model SearchViewModel
 
 @{
-    ViewData["Title"] = "لیست مخاطبین";
+    ViewData["Title"] = @Localizer["ContactList"];
 }
 
 <partial name="_Notification" />
@@ -9,7 +9,7 @@
 <div class="Container p-3">
 
     <h1 class="mt-4">
-        لیست مخاطبین
+        @Localizer["ContactList"]
         &nbsp; <i class="bi bi-person-lines-fill"></i>
     </h1>
     <hr />
@@ -31,26 +31,26 @@
     <div class="row mt-5">
         <form method="get" class="d-flex align-items-center gap-3">
             <div class="form-group">
-                <input asp-for="SearchName" class="form-control" placeholder="نام" />
+                <input asp-for="SearchName" class="form-control" placeholder="@Localizer["Name"]" />
             </div>
             <div class="form-group">
-                <input asp-for="SearchPhone" class="form-control" placeholder="شماره تلفن" />
+                <input asp-for="SearchPhone" class="form-control" placeholder="@Localizer["PhoneNumber"]" />
             </div>
             <div class="form-group">
-                <input asp-for="StartDate" id="startDate" class="form-control" placeholder="از تاریخ" />
+                <input asp-for="StartDate" id="startDate" class="form-control" placeholder="@Localizer["FromDate"]" />
             </div>
             <div class="form-group">
-                <input asp-for="EndDate" id="endDate" class="form-control" placeholder="تا تاریخ" />
+                <input asp-for="EndDate" id="endDate" class="form-control" placeholder="@Localizer["ToDate"]" />
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">
-                    جستجو
+                    @Localizer["Search"]
                     &nbsp; <i class="bi bi-search"></i>
                 </button>
             </div>
             <div class="form-group">
                 <a class="btn btn-success no-underline" asp-controller="Contacts" asp-action="Index">
-                    بازنشانی
+                    @Localizer["Reset"]
                     &nbsp; <i class="bi bi-arrow-clockwise"></i>
                 </a>
             </div>
@@ -60,10 +60,10 @@
     <table class="table table-striped mt-5">
         <thead>
             <tr class="table-info">
-                <th>نام</th>
-                <th>شماره همراه</th>
-                <th>تاریخ تولد</th>
-                <th>تصویر</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["PhoneNumber"]</th>
+                <th>@Localizer["BirthDate"]</th>
+                <th>@Localizer["Image"]</th>
                 <th></th>
             </tr>
         </thead>
@@ -83,8 +83,12 @@
                             }
                         </td>
                         <td class="text-end">
-                            <a asp-action="Create" asp-route-id="@item.Id" class="btn btn-sm btn-warning">ویرایش</a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">حذف</a>
+                            <a asp-action="Create" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
+                                @Localizer["Edit"]
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
+                                @Localizer["Delete"]
+                            </a>
                         </td>
                     </tr>
                 }

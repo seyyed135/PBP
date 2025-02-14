@@ -1,4 +1,5 @@
-﻿using PBP.Models;
+﻿using PBP.Localization;
+using PBP.Models;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -25,19 +26,15 @@ public class ContactViewModel
     [Required(ErrorMessage = "لطفا نام را وارد کنید")]
     [MaxLength(100, ErrorMessage = "نام نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد")]
     [MinLength(3, ErrorMessage = "نام باید حداقل ۳ کاراکتر باشد")]
-    [DisplayName("نام")]
     public string Name { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "لطفا شماره تلفن را وارد کنید")]
-    [DisplayName("شماره تلفن")]
     [RegularExpression(@"^\d{11}$", ErrorMessage = "شماره همراه باید ۱۱ رقمی باشد.")]
     public string PhoneNumber { get; set; } = string.Empty;
 
-    [DisplayName("تاریخ تولد")]
     [RegularExpression(@"^([۰-۹]{4})/([۰-۹]{2})/([۰-۹]{2})$", ErrorMessage = "تاریخ تولد باید به صورت شمسی و فرمت YYYY/MM/DD باشد.")]
     public string? BirthDate { get; set; }
 
-    [DisplayName("تصویر")]
     public IFormFile? Image { get; set; }
 
     internal async Task UpdateModelAsync(Contact model)

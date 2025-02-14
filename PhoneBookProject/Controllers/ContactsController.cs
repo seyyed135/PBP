@@ -8,11 +8,9 @@ using PBP.ViewModels;
 
 namespace PBP.Controllers;
 
-public class ContactsController(ApplicationDbContext context, IStringLocalizer<SharedResource> localizer) : Controller
+public class ContactsController(ApplicationDbContext context) : Controller
 {
     private readonly ApplicationDbContext _context = context;
-
-    private readonly IStringLocalizer<SharedResource> _localizer = localizer;
 
     #region See Contacts
 

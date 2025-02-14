@@ -1,12 +1,12 @@
 ﻿@model Contact
 
 @{
-    ViewData["Title"] = "حذف مخاطب";
+    ViewData["Title"] = @Localizer["DeleteContact"];
 }
 
 <div class="Container p-3">
     <h1 class="mt-4">
-        حذف مخاطب
+        @Localizer["DeleteContact"]
         &nbsp; <i class="bi bi-trash"></i>
     </h1>
     <hr />
@@ -14,25 +14,25 @@
     <div class="mt-5">
         <dl class="row">
             <dt class="col-sm-2">
-                نام
+                @Localizer["Name"]
             </dt>
             <dd class="col-sm-10">
                 @Model.Name
             </dd>
             <dt class="col-sm-2">
-                شماره تلفن
+                @Localizer["PhoneNumber"]
             </dt>
             <dd class="col-sm-10">
                 @Model.PhoneNumber
             </dd>
             <dt class="col-sm-2">
-                تاریخ تولد
+                @Localizer["BirthDate"]
             </dt>
             <dd class="col-sm-10">
                 @Model.BirthDate?.ToString("yyyy/MM/dd")
             </dd>
             <dt class="col-sm-2">
-                عکس
+                @Localizer["Image"]
             </dt>
             <dd class="col-sm-10">
                 @if (Model.Image != null)
@@ -44,14 +44,14 @@
 
         <div class="mt-4">
             <button id="deleteButton" class="btn btn-danger" style="padding-left: 3rem;padding-right: 3rem;text-align: unset;">
-                حذف
+                @Localizer["Delete"]
                 &nbsp; <i class="bi bi-trash"></i>
             </button>
         </div>
 
         <div class="mt-4">
             <a class="btn btn-success no-underline" asp-action="Index">
-                بازگشت به لیست
+                @Localizer["BackToList"]
                 &nbsp; <i class="bi bi-person-lines-fill"></i>
             </a>
         </div>
