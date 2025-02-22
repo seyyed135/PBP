@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PBP.Models;
+namespace PBP.DataAccess.Models;
 
 public class Contact
 {

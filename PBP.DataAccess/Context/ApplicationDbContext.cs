@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PBP.Models;
+using PBP.DataAccess.Models;
 
-namespace PBP.Data;
+namespace PBP.DataAccess.Context;
 
 public class ApplicationDbContext : DbContext
 {

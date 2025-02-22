@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PBP.Data;
-using PBP.Models;
+using PBP.DataAccess.Models;
+using PBP.DataAccess.Repository;
 using PBP.ViewModels;
 
 namespace PBP.Controllers;
 
-public class ContactsController(ApplicationDbContext context) : Controller
+public class ContactsController(IUnitOfWork unitOfWork) : Controller
 {
-    private readonly ApplicationDbContext _context = context;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     #region See Contacts
 
+    [HttpGet]
     public async Task<IActionResult> Index(SearchViewModel viewModel)
     {
         if (ModelState.IsValid)
@@ -20,24 +21,23 @@ public class ContactsController(ApplicationDbContext context) : Controller
             var gregorianStartDate = contactViewModel.PersianStringToGregorianDate(viewModel.StartDate);
             var gregorianEndDate = contactViewModel.PersianStringToGregorianDate(viewModel.EndDate);
 
-            var query = _context.Set<Contact>()
-                                    .Include(c => c.Image)
-                                    .AsQueryable();
-
-            if (!string.IsNullOrEmpty(viewModel.SearchName))
-                query = query.Where(c => c.Name.Contains(viewModel.SearchName.Trim()));
-
-            if (!string.IsNullOrEmpty(viewModel.SearchPhone))
-                query = query.Where(c => c.PhoneNumber.Contains(viewModel.SearchPhone.Trim()));
-
-            if (gregorianStartDate.HasValue)
-                query = query.Where(c => c.BirthDate >= gregorianStartDate.Value.Date);
-
-            if (gregorianEndDate.HasValue)
-                query = query.Where(c => c.BirthDate <= gregorianEndDate.Value.Date);
+            var query = _unitOfWork.ContactRepository.GetFilteredContactsWithImages(
+                                                        viewModel.SearchName,
+                                                        viewModel.SearchPhone,
+                                                        gregorianStartDate,
+                                                        gregorianEndDate
+                                                    );
 
             viewModel.Contacts = await query.ToListAsync();
-            return View(viewModel);
+
+            if (viewModel.Contacts.Count > 0)
+                return View(viewModel);
+
+            else
+            {
+                ModelState.AddModelError(string.Empty, "مخاطبی با مشخصات وارد شده یافت نشد");
+                return View(viewModel);
+            }
         }
         return View(viewModel);
     }
@@ -53,9 +53,8 @@ public class ContactsController(ApplicationDbContext context) : Controller
 
         if (id > 0)
         {
-            var contact = await _context.Set<Contact>()
-                                        .Include(c => c.Image)
-                                        .SingleOrDefaultAsync(c => c.Id == id);
+            var contact = await _unitOfWork.ContactRepository.GetByIdAsync(id!.Value);
+
             if (contact == null)
                 ModelState.AddModelError(string.Empty, $" مخاطب با شناسه {id} پیدا نشد .");
             else
@@ -75,10 +74,10 @@ public class ContactsController(ApplicationDbContext context) : Controller
         {
             if (viewModel.IsEdit)
             {
-                contact = await _context.Set<Contact>().FindAsync(viewModel.Id) ?? new();
+                contact = await _unitOfWork.ContactRepository.GetByIdAsync(viewModel.Id!.Value) ?? new();
             }
 
-            if (IsExistPhoneNumber(viewModel.PhoneNumber, viewModel.Id))
+            if (await IsExistPhoneNumberAsync(viewModel.PhoneNumber, viewModel.Id))
             {
                 ModelState.AddModelError("PhoneNumber", $"شماره تلفن {viewModel.PhoneNumber} از قبل در سیستم وجود دارد .");
                 return View(viewModel);
@@ -92,12 +91,11 @@ public class ContactsController(ApplicationDbContext context) : Controller
 
             if (viewModel.IsEdit && viewModel.Image != null)
             {
-                var selectedContactFromDb = await _context.Set<Contact>()
-                                                            .Include(c => c.Image)
-                                                            .SingleOrDefaultAsync(c => c.Id == viewModel.Id);
+                var selectedContactFromDb = await _unitOfWork.ContactRepository.GetContactByIdWithImageAsync(viewModel.Id!.Value);
+
                 if (selectedContactFromDb != null && selectedContactFromDb.Image != null)
                 {
-                    _context.Remove(selectedContactFromDb.Image);
+                    _unitOfWork.ContactRepository.DeleteImage(selectedContactFromDb.Image);
                 }
             }
 
@@ -111,15 +109,15 @@ public class ContactsController(ApplicationDbContext context) : Controller
 
             if (!viewModel.IsEdit)
             {
-                _context.Add(contact);
+                await _unitOfWork.ContactRepository.AddAsync(contact);
                 TempData["success"] = "مخاطب جدید با موفقیت ذخیره شد";
             }
             else
             {
-                _context.Update(contact);
+                _unitOfWork.ContactRepository.Update(contact);
                 TempData["success"] = "مخاطب با موفقیت ویرایش شد";
             }
-            await _context.SaveChangesAsync();
+            await _unitOfWork.ContactRepository.SaveAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -136,9 +134,8 @@ public class ContactsController(ApplicationDbContext context) : Controller
         if (id == null)
             return NotFound();
 
-        var contact = await _context.Set<Contact>()
-                                    .Include(c => c.Image)
-                                    .FirstOrDefaultAsync(m => m.Id == id);
+        var contact = await _unitOfWork.ContactRepository.GetContactByIdWithImageAsync(id!.Value);
+
         if (contact == null)
             return NotFound();
 
@@ -149,23 +146,23 @@ public class ContactsController(ApplicationDbContext context) : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var contact = await _context.Set<Contact>()
-                                    .Include(c => c.Image)
-                                    .FirstOrDefaultAsync(m => m.Id == id);
+        var contact = await _unitOfWork.ContactRepository.GetContactByIdWithImageAsync(id);
+
         if (contact?.Image != null)
-            _context.Remove(contact.Image);
+            _unitOfWork.ContactRepository.DeleteImage(contact.Image);
 
         if (contact != null)
-            _context.Remove(contact);
+            _unitOfWork.ContactRepository.Delete(contact);
 
-        await _context.SaveChangesAsync();
+        await _unitOfWork.ContactRepository.SaveAsync();
         TempData["success"] = "مخاطب با موفقیت حذف شد";
         return RedirectToAction(nameof(Index));
     }
 
     #endregion
 
-    bool IsExistPhoneNumber(string phoneNumber, int? id) => _context.Set<Contact>().Any(c =>
-                                                                                        c.PhoneNumber == phoneNumber &&
-                                                                                        (id == null || c.Id != id));
+    async Task<bool> IsExistPhoneNumberAsync(string phoneNumber, int? id)
+        => await _unitOfWork.ContactRepository.AnyAsync(c =>
+                                                        c.PhoneNumber == phoneNumber &&
+                                                        (id == null || c.Id != id));
 }

@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace PBP.Migrations;
+namespace PBP.DataAccess.Migrations;
 
 /// <inheritdoc />
 public partial class AddContactAndImageModel : Migration

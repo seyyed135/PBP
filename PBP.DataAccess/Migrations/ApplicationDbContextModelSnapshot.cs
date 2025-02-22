@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using PBP.Data;
+using PBP.DataAccess.Context;
 
 #nullable disable
 
-namespace PBP.Migrations;
+namespace PBP.DataAccess.Migrations;
 
 [DbContext(typeof(ApplicationDbContext))]
 partial class ApplicationDbContextModelSnapshot : ModelSnapshot

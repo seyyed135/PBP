@@ -1,4 +1,4 @@
-﻿using PBP.Models;
+﻿using PBP.DataAccess.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
