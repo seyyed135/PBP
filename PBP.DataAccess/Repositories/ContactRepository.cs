@@ -101,7 +101,11 @@ public class ContactRepository(ApplicationDbContext context) : Repository<Contac
     {
         if (fieldName == FieldName.Image)
         {
-            if (oldImage != null && newImage != null && !oldImage.SequenceEqual(newImage))
+            bool hasChanged = (oldImage == null && newImage != null) ||
+                              (oldImage != null && newImage == null) ||
+                              (oldImage != null && newImage != null && !oldImage.SequenceEqual(newImage));
+
+            if (hasChanged)
             {
                 changes.Add(new ContactChangeHistory
                 {
