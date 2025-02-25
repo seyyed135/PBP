@@ -24,7 +24,19 @@ public class ApplicationDbContext : DbContext
             .HasColumnType("Date");
 
         modelBuilder.Entity<ContactChangeHistory>()
-          .Property(c => c.ChangedDate)
-          .HasColumnType("Date");
+            .Property(c => c.ChangedDate)
+            .HasColumnType("Date");
+
+        modelBuilder.Entity<ContactChangeHistory>()
+            .HasIndex(c => c.ContactId);
+
+        modelBuilder.Entity<ContactChangeHistory>()
+            .HasIndex(c => c.FieldName);
+
+        modelBuilder.Entity<ContactChangeHistory>()
+            .HasIndex(c => c.ChangedDate);
+
+        modelBuilder.Entity<ContactChangeHistory>()
+            .HasIndex(c => c.ChangedTime);
     }
 }
