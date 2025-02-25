@@ -1,6 +1,6 @@
 ﻿using PBP.DataAccess.Models;
 
-namespace PBP.DataAccess.Repository;
+namespace PBP.DataAccess.Repositories;
 
 public interface IContactRepository : IRepository<Contact>
 {
@@ -10,7 +10,7 @@ public interface IContactRepository : IRepository<Contact>
 
     void DeleteImage(Image image);
 
-    IQueryable<ContactChangeHistory> GetFilteredChangesHistoryWithContactsAndImages(int? contactId, FieldName? feildName, DateTime? startDate, DateTime? endDate);
+    IQueryable<ContactChangeHistory> GetFilteredChangesHistoryWithContactsAndImages(int? contactId, FieldName? fieldName, string? content, DateTime? startDate, DateTime? endDate, string? startTime, string? endTime);
 
     Task AddChangeHistoryAsync(Contact contact);
 }

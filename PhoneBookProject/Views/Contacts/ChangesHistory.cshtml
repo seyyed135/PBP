@@ -28,8 +28,14 @@
 
     <div class="row mt-5">
         <form method="get" class="d-flex align-items-center gap-3">
+            <div class="form-group" style="width: 14rem;">
+                @{
+                    var fieldName = Localizer["FieldName"].Value;
+                }
+                @Html.DropDownListFor(m => m.FieldName, ViewBag.FieldNames as List<SelectListItem>, fieldName, new { @class = "form-control" })
+            </div>
             <div class="form-group">
-                <select asp-for="FieldName" class="form-control" asp-items="ViewBag.FieldNames"></select>
+                <input asp-for="Content" class="form-control" placeholder="@Localizer["Content"]" />
             </div>
             <div class="form-group">
                 <input asp-for="StartDate" id="startDate" class="form-control" placeholder="@Localizer["FromDate"]" />
@@ -38,15 +44,19 @@
                 <input asp-for="EndDate" id="endDate" class="form-control" placeholder="@Localizer["ToDate"]" />
             </div>
             <div class="form-group">
+                <input asp-for="StartTime" class="form-control" placeholder="@Localizer["FromTime"]" />
+            </div>
+            <div class="form-group">
+                <input asp-for="EndTime" class="form-control" placeholder="@Localizer["ToTime"]" />
+            </div>
+            <div class="form-group">
                 <button type="submit" class="btn btn-primary">
-                    @Localizer["Search"]
-                    &nbsp; <i class="bi bi-search"></i>
+                    @Localizer["Search"]     
                 </button>
             </div>
             <div class="form-group">
                 <a class="btn btn-success no-underline" asp-controller="Contacts" asp-action="ChangesHistory">
-                    @Localizer["Reset"]
-                    &nbsp; <i class="bi bi-arrow-clockwise"></i>
+                    @Localizer["Reset"]  
                 </a>
             </div>
         </form>
@@ -68,8 +78,8 @@
                 @foreach (var item in Model.ContactChangeHistorys)
                 {
                     <tr>
-                        <td>@item.FieldName</td>
-            
+                        <td>@item.FieldName.GetDisplayName()</td>
+
                         @if (item.FieldName == FieldName.Name || item.FieldName == FieldName.PhoneNumber)
                         {
                             <td>@item.OldValue</td>
@@ -137,6 +147,16 @@
                 errorAlert.fadeOut(300, function () {
                     $(this).remove();
                 });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('select').on('change', function() {
+                if ($(this).val() !== "") {
+                    $(this).find('option[value=""]').prop('disabled', true);
+                }
             });
         });
     </script>

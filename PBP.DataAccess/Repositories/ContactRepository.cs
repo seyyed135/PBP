@@ -2,7 +2,7 @@
 using PBP.DataAccess.Context;
 using PBP.DataAccess.Models;
 
-namespace PBP.DataAccess.Repository;
+namespace PBP.DataAccess.Repositories;
 
 public class ContactRepository(ApplicationDbContext context) : Repository<Contact>(context), IContactRepository
 {
@@ -37,7 +37,7 @@ public class ContactRepository(ApplicationDbContext context) : Repository<Contac
 
     public void DeleteImage(Image image) => _context.Remove(image);
 
-    public IQueryable<ContactChangeHistory> GetFilteredChangesHistoryWithContactsAndImages(int? contactId, FieldName? fieldName, DateTime? startDate, DateTime? endDate)
+    public IQueryable<ContactChangeHistory> GetFilteredChangesHistoryWithContactsAndImages(int? contactId, FieldName? fieldName, string? content, DateTime? startDate, DateTime? endDate, string? startTime, string? endTime)
     {
         var query = _context.Set<ContactChangeHistory>()
                                 .Include(c => c.Contact)
@@ -49,13 +49,25 @@ public class ContactRepository(ApplicationDbContext context) : Repository<Contac
         if (fieldName.HasValue)
             query = query.Where(ch => ch.FieldName == fieldName);
 
+        if (!string.IsNullOrEmpty(content))
+            query = query.Where(ch => (ch.OldImage == null && ch.NewImage == null) &&
+                                        (ch.OldValue!.Contains(content) || ch.NewValue!.Contains(content))
+                                        );
+
         if (startDate.HasValue)
             query = query.Where(ch => ch.ChangedDate >= startDate.Value);
 
         if (endDate.HasValue)
             query = query.Where(ch => ch.ChangedDate <= endDate.Value);
 
-        return query.OrderByDescending(ch => ch.ChangedDate);
+        if (!string.IsNullOrEmpty(startTime))
+            query = query.Where(ch => string.Compare(ch.ChangedTime, startTime) >= 0);
+
+        if (!string.IsNullOrEmpty(endTime))
+            query = query.Where(ch => string.Compare(ch.ChangedTime, endTime) <= 0);
+
+        return query.OrderByDescending(ch => ch.ChangedDate)
+                                .ThenByDescending(ch => ch.ChangedTime);
     }
 
     public async Task AddChangeHistoryAsync(Contact contact)

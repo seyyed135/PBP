@@ -2,7 +2,7 @@
 using PBP.DataAccess.Context;
 using System.Linq.Expressions;
 
-namespace PBP.DataAccess.Repository;
+namespace PBP.DataAccess.Repositories;
 
 public class Repository<T>(ApplicationDbContext context) : IRepository<T> where T : class
 {

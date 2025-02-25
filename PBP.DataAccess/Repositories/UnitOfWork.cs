@@ -1,6 +1,6 @@
 ﻿using PBP.DataAccess.Context;
 
-namespace PBP.DataAccess.Repository;
+namespace PBP.DataAccess.Repositories;
 
 public class UnitOfWork : IUnitOfWork
 {

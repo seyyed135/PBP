@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using PBP.DataAccess.Context;
-using PBP.DataAccess.Repository;
+using PBP.DataAccess.Repositories;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);

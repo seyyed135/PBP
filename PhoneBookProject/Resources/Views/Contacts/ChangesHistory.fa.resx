@@ -120,6 +120,9 @@
   <data name="ChangesHistory" xml:space="preserve">
     <value>تاریخچه تغییرات</value>
   </data>
+  <data name="FromTime" xml:space="preserve">
+    <value>از ساعت</value>
+  </data>
   <data name="FieldName" xml:space="preserve">
     <value>نام فیلد</value>
   </data>
@@ -128,6 +131,12 @@
   </data>
   <data name="ToDate" xml:space="preserve">
     <value>تا تاریخ</value>
+  </data>
+  <data name="ToTime" xml:space="preserve">
+    <value>تا ساعت</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>محتوا</value>
   </data>
   <data name="ChangedTime" xml:space="preserve">
     <value>زمان تغییر</value>

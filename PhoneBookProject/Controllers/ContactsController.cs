@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PBP.DataAccess.Models;
-using PBP.DataAccess.Repository;
+using PBP.DataAccess.Repositories;
+using PBP.Extensions;
 using PBP.ViewModels;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
@@ -56,18 +57,13 @@ public class ContactsController(IUnitOfWork unitOfWork) : Controller
     public async Task<IActionResult> ChangesHistory(int? id, SearchChangesHistoryViewModel viewModel)
     {
         var fieldNames = Enum.GetValues(typeof(FieldName))
-                          .Cast<FieldName>()
-                          .Select(f =>
-                          {
-                              var fieldInfo = f.GetType().GetField(f.ToString());
-                              var displayAttribute = fieldInfo?.GetCustomAttribute<DisplayAttribute>();
-
-                              return new SelectListItem
-                              {
-                                  Text = displayAttribute?.Name ?? f.ToString(),
-                                  Value = f.ToString()
-                              };
-                          }).ToList();
+                                .Cast<FieldName>()
+                                .Select(e => new SelectListItem
+                                {
+                                    Value = e.ToString(),
+                                    Text = e.GetDisplayName()
+                                })
+                                .ToList();
 
         ViewBag.FieldNames = fieldNames;
 
@@ -80,8 +76,11 @@ public class ContactsController(IUnitOfWork unitOfWork) : Controller
             var query = _unitOfWork.ContactRepository.GetFilteredChangesHistoryWithContactsAndImages(
                                                                 id,
                                                                 viewModel.FieldName,
+                                                                viewModel.Content,
                                                                 gregorianStartDate,
-                                                                gregorianEndDate
+                                                                gregorianEndDate,
+                                                                viewModel.StartTime,
+                                                                viewModel.EndTime
                                                             );
 
             viewModel.ContactChangeHistorys = await query.ToListAsync();

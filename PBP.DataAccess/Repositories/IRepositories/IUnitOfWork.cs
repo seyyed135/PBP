@@ -1,4 +1,4 @@
-﻿namespace PBP.DataAccess.Repository;
+﻿namespace PBP.DataAccess.Repositories;
 
 public interface IUnitOfWork
 {
