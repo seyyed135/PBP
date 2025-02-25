@@ -1,16 +1,14 @@
-﻿@model SearchContactViewModel
+﻿@model SearchChangesHistoryViewModel
 
 @{
-    ViewData["Title"] = @Localizer["ContactList"];
+    ViewData["Title"] = @Localizer["ChangesHistory"];
 }
-
-<partial name="_Notification" />
 
 <div class="Container p-3">
 
     <h1 class="mt-4">
-        @Localizer["ContactList"]
-        &nbsp; <i class="bi bi-person-lines-fill"></i>
+        @Localizer["ChangesHistory"]
+        &nbsp; <i class="bi bi-hourglass"></i>
     </h1>
     <hr />
 
@@ -31,10 +29,7 @@
     <div class="row mt-5">
         <form method="get" class="d-flex align-items-center gap-3">
             <div class="form-group">
-                <input asp-for="SearchName" class="form-control" placeholder="@Localizer["Name"]" />
-            </div>
-            <div class="form-group">
-                <input asp-for="SearchPhone" class="form-control" placeholder="@Localizer["PhoneNumber"]" />
+                <select asp-for="FieldName" class="form-control" asp-items="ViewBag.FieldNames"></select>
             </div>
             <div class="form-group">
                 <input asp-for="StartDate" id="startDate" class="form-control" placeholder="@Localizer["FromDate"]" />
@@ -49,7 +44,7 @@
                 </button>
             </div>
             <div class="form-group">
-                <a class="btn btn-success no-underline" asp-controller="Contacts" asp-action="Index">
+                <a class="btn btn-success no-underline" asp-controller="Contacts" asp-action="ChangesHistory">
                     @Localizer["Reset"]
                     &nbsp; <i class="bi bi-arrow-clockwise"></i>
                 </a>
@@ -60,42 +55,51 @@
     <table class="table table-striped mt-5">
         <thead>
             <tr class="table-info">
-                <th>@Localizer["Name"]</th>
-                <th>@Localizer["PhoneNumber"]</th>
-                <th>@Localizer["BirthDate"]</th>
-                <th>@Localizer["Image"]</th>
-                <th></th>
+                <th>@Localizer["FieldName"]</th>
+                <th>@Localizer["OldValue"]</th>
+                <th>@Localizer["NewValue"]</th>
+                <th>@Localizer["ChangedDate"]</th>
+                <th>@Localizer["ChangedTime"]</th>
             </tr>
         </thead>
         <tbody>
-            @if (Model.Contacts != null)
+            @if (Model.ContactChangeHistorys != null)
             {
-                @foreach (var item in Model.Contacts)
+                @foreach (var item in Model.ContactChangeHistorys)
                 {
                     <tr>
-                        <td>@item.Name</td>
-                        <td>@item.PhoneNumber</td>
-                        <td>@item.BirthDate?.ToString("yyyy/MM/dd")</td>
-                        <td>
-                            @if (item.Image != null)
-                            {
-                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Image.Data)" width="50" />
-                            }
-                        </td>
-                        <td class="text-end">
-                            <a asp-action="Create" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
-                                @Localizer["Edit"]
-                            </a>
-                            @if (item.ChangesHistory?.Count > 0)
-                            {
-                                <a asp-action="ChangesHistory" asp-route-id="@item.Id" class="btn btn-sm btn-info">
-                                    @Localizer["ChangesHistory"]
-                                </a>
-                            }
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
-                                @Localizer["Delete"]
-                            </a>
-                        </td>
+                        <td>@item.FieldName</td>
+            
+                        @if (item.FieldName == FieldName.Name || item.FieldName == FieldName.PhoneNumber)
+                        {
+                            <td>@item.OldValue</td>
+                            <td>@item.NewValue</td>
+                        }
+                        @if (item.FieldName == FieldName.BirthDate)
+                        {
+                            var oldValue = Convert.ToDateTime(item.OldValue);
+                            var newValue = Convert.ToDateTime(item.NewValue);
+                            <td>@oldValue.ToString("yyyy/MM/dd")</td>
+                            <td>@newValue.ToString("yyyy/MM/dd")</td>
+                        }
+                        @if (item.FieldName == FieldName.Image)
+                        {
+                            <td>
+                                @if (item.OldImage != null)
+                                {
+                                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.OldImage)" width="50" />
+                                }
+                            </td>
+                            <td>
+                                @if (item.NewImage != null)
+                                {
+                                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.NewImage)" width="50" />
+                                }
+                            </td>
+                        }
+
+                        <td>@item.ChangedDate.ToString("yyyy/MM/dd")</td>
+                        <td>@item.ChangedTime</td>
                     </tr>
                 }
             }

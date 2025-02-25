@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PBP.ViewModels;
 
-public class SearchViewModel
+public class SearchContactViewModel
 {
     public string? SearchName { get; set; }
 

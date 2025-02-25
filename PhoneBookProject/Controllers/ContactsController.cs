@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PBP.DataAccess.Models;
 using PBP.DataAccess.Repository;
 using PBP.ViewModels;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 namespace PBP.Controllers;
 
@@ -13,7 +16,7 @@ public class ContactsController(IUnitOfWork unitOfWork) : Controller
     #region See Contacts
 
     [HttpGet]
-    public async Task<IActionResult> Index(SearchViewModel viewModel)
+    public async Task<IActionResult> Index(SearchContactViewModel viewModel)
     {
         if (ModelState.IsValid)
         {
@@ -21,7 +24,7 @@ public class ContactsController(IUnitOfWork unitOfWork) : Controller
             var gregorianStartDate = contactViewModel.PersianStringToGregorianDate(viewModel.StartDate);
             var gregorianEndDate = contactViewModel.PersianStringToGregorianDate(viewModel.EndDate);
 
-            var query = _unitOfWork.ContactRepository.GetFilteredContactsWithImages(
+            var query = _unitOfWork.ContactRepository.GetFilteredContactsWithImagesAndChangesHistory(
                                                         viewModel.SearchName,
                                                         viewModel.SearchPhone,
                                                         gregorianStartDate,
@@ -31,11 +34,65 @@ public class ContactsController(IUnitOfWork unitOfWork) : Controller
             viewModel.Contacts = await query.ToListAsync();
 
             if (viewModel.Contacts.Count > 0)
+            {
                 return View(viewModel);
-
+            }
             else
+            if (!string.IsNullOrEmpty(viewModel.SearchName) || !string.IsNullOrEmpty(viewModel.SearchPhone) ||
+                !string.IsNullOrEmpty(viewModel.EndDate) || !string.IsNullOrEmpty(viewModel.StartDate))
             {
                 ModelState.AddModelError(string.Empty, "مخاطبی با مشخصات وارد شده یافت نشد");
+                return View(viewModel);
+            }
+        }
+        return View(viewModel);
+    }
+
+    #endregion
+
+    #region See Changes History
+
+    [HttpGet]
+    public async Task<IActionResult> ChangesHistory(int? id, SearchChangesHistoryViewModel viewModel)
+    {
+        var fieldNames = Enum.GetValues(typeof(FieldName))
+                          .Cast<FieldName>()
+                          .Select(f =>
+                          {
+                              var fieldInfo = f.GetType().GetField(f.ToString());
+                              var displayAttribute = fieldInfo?.GetCustomAttribute<DisplayAttribute>();
+
+                              return new SelectListItem
+                              {
+                                  Text = displayAttribute?.Name ?? f.ToString(),
+                                  Value = f.ToString()
+                              };
+                          }).ToList();
+
+        ViewBag.FieldNames = fieldNames;
+
+        if (ModelState.IsValid)
+        {
+            var contactViewModel = new ContactViewModel();
+            var gregorianStartDate = contactViewModel.PersianStringToGregorianDate(viewModel.StartDate);
+            var gregorianEndDate = contactViewModel.PersianStringToGregorianDate(viewModel.EndDate);
+
+            var query = _unitOfWork.ContactRepository.GetFilteredChangesHistoryWithContactsAndImages(
+                                                                id,
+                                                                viewModel.FieldName,
+                                                                gregorianStartDate,
+                                                                gregorianEndDate
+                                                            );
+
+            viewModel.ContactChangeHistorys = await query.ToListAsync();
+
+            if (viewModel.ContactChangeHistorys.Count > 0)
+            {
+                return View(viewModel);
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, @"""مخاطب تغییر داده شده ای"" با مشخصات وارد شده یافت نشد");
                 return View(viewModel);
             }
         }
@@ -74,7 +131,7 @@ public class ContactsController(IUnitOfWork unitOfWork) : Controller
         {
             if (viewModel.IsEdit)
             {
-                contact = await _unitOfWork.ContactRepository.GetByIdAsync(viewModel.Id!.Value) ?? new();
+                contact = await _unitOfWork.ContactRepository.GetContactByIdWithImageAsync(viewModel.Id!.Value) ?? new();
             }
 
             if (await IsExistPhoneNumberAsync(viewModel.PhoneNumber, viewModel.Id))
@@ -114,6 +171,7 @@ public class ContactsController(IUnitOfWork unitOfWork) : Controller
             }
             else
             {
+                await _unitOfWork.ContactRepository.AddChangeHistoryAsync(contact);
                 _unitOfWork.ContactRepository.Update(contact);
                 TempData["success"] = "مخاطب با موفقیت ویرایش شد";
             }

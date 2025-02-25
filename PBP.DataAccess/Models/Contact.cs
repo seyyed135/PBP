@@ -19,4 +19,6 @@ public class Contact
 
     public int? ImageId { get; set; }
     public Image? Image { get; set; }
+
+    public ICollection<ContactChangeHistory>? ChangesHistory { get; set; }
 }

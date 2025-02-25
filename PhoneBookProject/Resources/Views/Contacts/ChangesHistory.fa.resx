@@ -117,20 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ContactList" xml:space="preserve">
-    <value>لیست مخاطبین</value>
-  </data>
   <data name="ChangesHistory" xml:space="preserve">
     <value>تاریخچه تغییرات</value>
   </data>
-  <data name="Name" xml:space="preserve">
-    <value>نام</value>
-  </data>
-  <data name="Delete" xml:space="preserve">
-    <value>حذف</value>
-  </data>
-  <data name="PhoneNumber" xml:space="preserve">
-    <value>شماره تلفن</value>
+  <data name="FieldName" xml:space="preserve">
+    <value>نام فیلد</value>
   </data>
   <data name="FromDate" xml:space="preserve">
     <value>از تاریخ</value>
@@ -138,19 +129,22 @@
   <data name="ToDate" xml:space="preserve">
     <value>تا تاریخ</value>
   </data>
-  <data name="Search" xml:space="preserve">
-    <value>جستوجو</value>
+  <data name="ChangedTime" xml:space="preserve">
+    <value>زمان تغییر</value>
+  </data>
+  <data name="NewValue" xml:space="preserve">
+    <value>محتوای فعلی</value>
   </data>
   <data name="Reset" xml:space="preserve">
     <value>بازنشانی</value>
   </data>
-  <data name="BirthDate" xml:space="preserve">
-    <value>تاریخ تولد</value>
+  <data name="Search" xml:space="preserve">
+    <value>جستوجو</value>
   </data>
-  <data name="Image" xml:space="preserve">
-    <value>تصویر</value>
+  <data name="OldValue" xml:space="preserve">
+    <value>محتوای قبلی</value>
   </data>
-  <data name="Edit" xml:space="preserve">
-    <value>ویرایش</value>
+  <data name="ChangedDate" xml:space="preserve">
+    <value>تاریخ تغییر</value>
   </data>
 </root>
