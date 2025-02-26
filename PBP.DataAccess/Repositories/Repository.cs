@@ -21,6 +21,8 @@ public class Repository<T>(ApplicationDbContext context) : IRepository<T> where 
 
     public async Task<T?> GetByIdAsync(int id) => await _dbSet.FindAsync(id);
 
+    public async Task<IEnumerable<TResult>> SelectAsync<TResult>(Expression<Func<T, TResult>> selector) => await _dbSet.Select(selector).ToListAsync();
+
     public async Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> filter) => await _dbSet.Where(filter).ToListAsync();
 
     public async Task<bool> AnyAsync(Expression<Func<T, bool>> filter) => await _dbSet.AnyAsync(filter);

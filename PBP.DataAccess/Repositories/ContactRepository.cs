@@ -10,8 +10,13 @@ public class ContactRepository(ApplicationDbContext context) : Repository<Contac
 
 
     public async Task<Contact?> GetContactByIdWithImageAsync(int id) => await _context.Set<Contact>()
-                                                                                    .Include(c => c.Image)
-                                                                                    .FirstOrDefaultAsync(c => c.Id == id);
+                                                                                        .Include(c => c.Image)
+                                                                                        .FirstOrDefaultAsync(c => c.Id == id);
+
+    public async Task<IEnumerable<Contact>> GetAllContactsAndImagesAsync() => await _context.Set<Contact>()
+                                                                                            .Include(c => c.Image)
+                                                                                            .ToListAsync();
+    public void DeleteImage(Image image) => _context.Remove(image);
 
     public IQueryable<Contact> GetFilteredContactsWithImagesAndChangesHistory(string? searchName, string? searchPhone, DateTime? startDate, DateTime? endDate)
     {
@@ -34,8 +39,6 @@ public class ContactRepository(ApplicationDbContext context) : Repository<Contac
 
         return query;
     }
-
-    public void DeleteImage(Image image) => _context.Remove(image);
 
     public IQueryable<ContactChangeHistory> GetFilteredChangesHistoryWithContactsAndImages(int? contactId, FieldName? fieldName, string? content, DateTime? startDate, DateTime? endDate, string? startTime, string? endTime)
     {

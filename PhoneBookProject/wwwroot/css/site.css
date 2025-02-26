@@ -60,3 +60,18 @@ select option[value=""] {
 select option:not([value=""]) {
     color: #000;
 }
+
+.gallery-image {
+    height: 30rem;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.dl-spacing dt {
+    margin-bottom: 2rem; 
+}
+
+.dl-spacing dd {
+    margin-bottom: 2rem;
+}

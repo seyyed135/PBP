@@ -10,6 +10,8 @@ public interface IRepository<T> where T : class
 
     Task<T?> GetByIdAsync(int id);
 
+    Task<IEnumerable<TResult>> SelectAsync<TResult>(Expression<Func<T, TResult>> selector);
+
     Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> filter);
 
     Task<bool> AnyAsync(Expression<Func<T, bool>> filter);

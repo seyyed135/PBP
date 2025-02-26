@@ -5,8 +5,6 @@ using PBP.DataAccess.Models;
 using PBP.DataAccess.Repositories;
 using PBP.Extensions;
 using PBP.ViewModels;
-using System.ComponentModel.DataAnnotations;
-using System.Reflection;
 
 namespace PBP.Controllers;
 
@@ -47,6 +45,17 @@ public class ContactsController(IUnitOfWork unitOfWork) : Controller
             }
         }
         return View(viewModel);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Details(int id)
+    {
+        var contact = await _unitOfWork.ContactRepository.GetContactByIdWithImageAsync(id);
+
+        if (contact == null)
+            return NotFound();
+
+        return View(contact);
     }
 
     #endregion
@@ -91,11 +100,33 @@ public class ContactsController(IUnitOfWork unitOfWork) : Controller
             }
             else
             {
-                ModelState.AddModelError(string.Empty, @"""مخاطب تغییر داده شده ای"" با مشخصات وارد شده یافت نشد");
+                ModelState.AddModelError(string.Empty, @"تغییری برای مخاطب با مشخصات وارد شده یافت نشد");
                 return View(viewModel);
             }
         }
         return View(viewModel);
+    }
+
+    #endregion
+
+    #region See Gallery
+
+    [HttpGet]
+    public async Task<IActionResult> Gallery()
+    {
+        var contacts = await _unitOfWork.ContactRepository.GetAllContactsAndImagesAsync();
+
+        var GalleryViewModels = new List<GalleryViewModel>();
+
+        foreach (var contact in contacts)
+        {
+            if (contact.Image != null)
+            {
+                GalleryViewModels.Add(new GalleryViewModel(contact));
+            }
+        }
+
+        return View(GalleryViewModels);
     }
 
     #endregion
@@ -109,7 +140,7 @@ public class ContactsController(IUnitOfWork unitOfWork) : Controller
 
         if (id > 0)
         {
-            var contact = await _unitOfWork.ContactRepository.GetByIdAsync(id!.Value);
+            var contact = await _unitOfWork.ContactRepository.GetContactByIdWithImageAsync(id!.Value) ?? new();
 
             if (contact == null)
                 ModelState.AddModelError(string.Empty, $" مخاطب با شناسه {id} پیدا نشد .");

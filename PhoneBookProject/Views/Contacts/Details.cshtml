@@ -1,0 +1,43 @@
+﻿@model Contact
+
+@{
+    ViewData["Title"] = @Localizer["DetailsContact"];
+}
+
+<div class="Container p-3">
+    <h1 class="mt-4">
+        @Localizer["DetailsContact"]
+        &nbsp; <i class="bi bi-info-circle"></i>
+    </h1>
+    <hr />
+
+    <div class="mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row dl-spacing">
+                    <dt class="col-sm-4">@Localizer["Name"]</dt>
+                    <dd class="col-sm-8">@Model.Name</dd>
+
+                    <dt class="col-sm-4">@Localizer["PhoneNumber"]</dt>
+                    <dd class="col-sm-8">@Model.PhoneNumber</dd>
+
+                    <dt class="col-sm-4">@Localizer["BirthDate"]</dt>
+                    <dd class="col-sm-8">@Model.BirthDate?.ToString("yyyy/MM/dd")</dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                @if (Model.Image != null && Model.Image.Data.Length > 0)
+                {
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Image.Data)" class="img-thumbnail" alt="@Model.Name" />
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a class="btn btn-success no-underline" asp-action="Gallery">
+            بازگشت به گالری
+            &nbsp; <i class="bi bi-arrow-left"></i>
+        </a>
+    </div>
+</div>
