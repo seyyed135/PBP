@@ -1,8 +1,12 @@
 ﻿@model List<GalleryViewModel>
 
+@{
+    ViewData["Title"] = @Localizer["ContactsImageGallery"];
+}
+
 <div class="Container p-3">
     <h1 class="mt-4">
-        گالری تصاویر
+        @Localizer["ContactsImageGallery"]
         &nbsp; <i class="bi bi-images"></i>
     </h1>
     <hr />
@@ -17,14 +21,10 @@
                         <a asp-action="Details" asp-route-id="@item.ContactId">
                             <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.ImageData)" class="card-img-top gallery-image" alt="Default Image" />
                         </a>
-                    }
-                    else
-                    {
-                        <img src="/images/default-profile.png" class="card-img-top gallery-image" alt="Default Image" />
-                    }
+                    }            
                     <div class="card-body">
                         <a asp-action="Details" asp-route-id="@item.ContactId" class="btn btn-primary">
-                            مشاهده جزئیات
+                            @Localizer["ViewDetails"]
                             &nbsp; <i class="bi bi-info-circle"></i>
                         </a>
                     </div>

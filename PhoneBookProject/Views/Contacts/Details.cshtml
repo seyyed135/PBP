@@ -28,7 +28,7 @@
             <div class="col-md-6">
                 @if (Model.Image != null && Model.Image.Data.Length > 0)
                 {
-                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Image.Data)" class="img-thumbnail" alt="@Model.Name" />
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Image.Data)" class="img-thumbnail" alt="@Model.Name" style="max-width: 200px;" />
                 }
             </div>
         </div>
@@ -36,7 +36,7 @@
 
     <div class="mt-4">
         <a class="btn btn-success no-underline" asp-action="Gallery">
-            بازگشت به گالری
+            @Localizer["BackToGallery"]
             &nbsp; <i class="bi bi-arrow-left"></i>
         </a>
     </div>

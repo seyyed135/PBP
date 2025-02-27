@@ -28,21 +28,21 @@
             <div class="col-md-6">
                 @if (Model.Image != null && Model.Image.Data.Length > 0)
                 {
-                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Image.Data)" class="img-thumbnail" alt="@Model.Name" />
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Image.Data)" class="img-thumbnail" alt="@Model.Name" style="max-width: 200px;" />
                 }
             </div>
         </div>
     </div>
 
     <div class="mt-4">
-        <button id="deleteButton" class="btn btn-danger" style="padding-left: 3rem;padding-right: 3rem;text-align: unset;">
+        <button id="deleteButton" class="btn btn-danger" style="padding-left:3rem; padding-right:3rem; text-align:unset; width:10rem;">
             @Localizer["Delete"]
             &nbsp; <i class="bi bi-trash"></i>
         </button>
     </div>
 
     <div class="mt-4">
-        <a class="btn btn-success no-underline" asp-action="Index">
+        <a class="btn btn-success no-underline" style="width:10rem;" asp-action="Index">
             @Localizer["BackToList"]
             &nbsp; <i class="bi bi-arrow-left"></i>
         </a>

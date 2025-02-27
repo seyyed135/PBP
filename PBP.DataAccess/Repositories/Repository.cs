@@ -21,10 +21,6 @@ public class Repository<T>(ApplicationDbContext context) : IRepository<T> where 
 
     public async Task<T?> GetByIdAsync(int id) => await _dbSet.FindAsync(id);
 
-    public async Task<IEnumerable<TResult>> SelectAsync<TResult>(Expression<Func<T, TResult>> selector) => await _dbSet.Select(selector).ToListAsync();
-
-    public async Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> filter) => await _dbSet.Where(filter).ToListAsync();
-
     public async Task<bool> AnyAsync(Expression<Func<T, bool>> filter) => await _dbSet.AnyAsync(filter);
 
     public async Task AddAsync(T entity) => await _dbSet.AddAsync(entity);
@@ -32,8 +28,6 @@ public class Repository<T>(ApplicationDbContext context) : IRepository<T> where 
     public void Update(T entity) => _dbSet.Update(entity);
 
     public void Delete(T entity) => _dbSet.Remove(entity);
-
-    public void DeleteRange(IEnumerable<T> entities) => _dbSet.RemoveRange(entities);
 
     public async Task SaveAsync() => await _context.SaveChangesAsync();
 }

@@ -51,12 +51,12 @@
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">
-                    @Localizer["Search"]     
+                    @Localizer["Search"]
                 </button>
             </div>
             <div class="form-group">
                 <a class="btn btn-success no-underline" asp-controller="Contacts" asp-action="ChangesHistory">
-                    @Localizer["Reset"]  
+                    @Localizer["Reset"]
                 </a>
             </div>
         </form>
@@ -87,23 +87,38 @@
                         }
                         @if (item.FieldName == FieldName.BirthDate)
                         {
-                            var oldValue = Convert.ToDateTime(item.OldValue);
-                            var newValue = Convert.ToDateTime(item.NewValue);
-                            <td>@oldValue.ToString("yyyy/MM/dd")</td>
-                            <td>@newValue.ToString("yyyy/MM/dd")</td>
+                            @if (!string.IsNullOrEmpty(item.OldValue))
+                            {
+                                var oldValue = Convert.ToDateTime(item.OldValue);
+                                <td>@oldValue.ToString("yyyy/MM/dd")</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+
+                            @if (!string.IsNullOrEmpty(item.NewValue))
+                            {
+                                var newValue = Convert.ToDateTime(item.NewValue);
+                                <td>@newValue.ToString("yyyy/MM/dd")</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
                         }
                         @if (item.FieldName == FieldName.Image)
                         {
                             <td>
                                 @if (item.OldImage != null)
                                 {
-                                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.OldImage)" width="50" />
+                                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.OldImage)" class="img-thumbnail" width="75" />
                                 }
                             </td>
                             <td>
                                 @if (item.NewImage != null)
                                 {
-                                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.NewImage)" width="50" />
+                                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.NewImage)" class="img-thumbnail" width="75" />
                                 }
                             </td>
                         }
