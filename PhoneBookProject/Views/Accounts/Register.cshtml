@@ -1,0 +1,95 @@
+﻿@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "ثبت‌نام در سیستم";
+}
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - دفتر تلفن</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/css/rtlTheme.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/PhoneBookProject.styles.css" asp-append-version="true" />
+</head>
+
+<body class="auth-page">
+    <div class="auth-container">
+        @if (ViewData.ModelState.ErrorCount > 0)
+        {
+            <div id="error-alert" class="alert alert-danger d-flex align-items-center p-3 rounded shadow-lg animate-fade-in">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <ul class="mb-0">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                </ul>
+                <button type="button" class="btn-close ms-3 close-error-btn"></button>
+            </div>
+        }
+        <h2>ثبت‌نام در سیستم</h2>
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="UserName">
+                    نام کاربری
+                </label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email">
+                    ایمیل
+                </label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password">
+                    رمز عبور
+                </label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmPassword">
+                    تایید رمز عبور
+                </label>
+                <input asp-for="ConfirmPassword" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-success">ثبت‌نام</button>
+            <p class="text-center mt-3">
+                حساب کاربری داری؟
+                <a asp-controller="Accounts" asp-action="Login" class="text-primary">وارد شو</a>
+            </p>
+        </form>
+    </div>
+    @section Scripts {
+        <script>
+            $(document).ready(function () {
+                let errorAlert = $("#error-alert");
+                if (errorAlert.length) {
+                    setTimeout(function () {
+                        errorAlert.fadeOut(300, function () {
+                            $(this).remove();
+                        });
+                    }, 10000);
+                }
+                $(".close-error-btn").on("click", function () {
+                    errorAlert.fadeOut(300, function () {
+                        $(this).remove();
+                    });
+                });
+            });
+        </script>
+    }
+</body>
+</html>

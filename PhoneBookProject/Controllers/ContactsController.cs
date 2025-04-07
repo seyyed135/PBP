@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PBP.DataAccess.Models;
@@ -8,8 +10,11 @@ using PBP.ViewModels;
 
 namespace PBP.Controllers;
 
-public class ContactsController(IUnitOfWork unitOfWork) : Controller
+[Authorize]
+public class ContactsController(UserManager<IdentityUser> userManager, ActivityLogService activityLogService, IUnitOfWork unitOfWork) : Controller
 {
+    private readonly UserManager<IdentityUser> _userManager = userManager;
+    private readonly ActivityLogService _activityLogService = activityLogService;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     #region See Contacts
@@ -31,6 +36,9 @@ public class ContactsController(IUnitOfWork unitOfWork) : Controller
                                                     );
 
             viewModel.Contacts = await query.ToListAsync();
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null)
+                await _activityLogService.LogActivityAsync(user.Id, "User Viewed Contacts");
 
             if (viewModel.Contacts.Count > 0)
             {
@@ -54,6 +62,10 @@ public class ContactsController(IUnitOfWork unitOfWork) : Controller
 
         if (contact == null)
             return NotFound();
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user != null)
+            await _activityLogService.LogActivityAsync(user.Id, "User Viewed Contact Details");
 
         return View(contact);
     }
@@ -93,6 +105,9 @@ public class ContactsController(IUnitOfWork unitOfWork) : Controller
                                                             );
 
             viewModel.ContactChangeHistorys = await query.ToListAsync();
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null)
+                await _activityLogService.LogActivityAsync(user.Id, "User Viewed Changes History Contacts");
 
             if (viewModel.ContactChangeHistorys.Count > 0)
             {
@@ -125,6 +140,10 @@ public class ContactsController(IUnitOfWork unitOfWork) : Controller
                 GalleryViewModels.Add(new GalleryViewModel(contact));
             }
         }
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user != null)
+            await _activityLogService.LogActivityAsync(user.Id, "User Viewed Gallery");
 
         return View(GalleryViewModels);
     }
@@ -197,12 +216,18 @@ public class ContactsController(IUnitOfWork unitOfWork) : Controller
             if (!viewModel.IsEdit)
             {
                 await _unitOfWork.ContactRepository.AddAsync(contact);
+                var user = await _userManager.GetUserAsync(User);
+                if (user != null)
+                    await _activityLogService.LogActivityAsync(user.Id, "User Add Contact");
                 TempData["success"] = "مخاطب جدید با موفقیت ذخیره شد";
             }
             else
             {
                 await _unitOfWork.ContactRepository.AddChangeHistoryAsync(contact);
                 _unitOfWork.ContactRepository.Update(contact);
+                var user = await _userManager.GetUserAsync(User);
+                if (user != null)
+                    await _activityLogService.LogActivityAsync(user.Id, "User Update Contact");
                 TempData["success"] = "مخاطب با موفقیت ویرایش شد";
             }
             await _unitOfWork.ContactRepository.SaveAsync();
@@ -241,6 +266,10 @@ public class ContactsController(IUnitOfWork unitOfWork) : Controller
 
         if (contact != null)
             _unitOfWork.ContactRepository.Delete(contact);
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user != null)
+            await _activityLogService.LogActivityAsync(user.Id, "User Delete Contact");
 
         await _unitOfWork.ContactRepository.SaveAsync();
         TempData["success"] = "مخاطب با موفقیت حذف شد";

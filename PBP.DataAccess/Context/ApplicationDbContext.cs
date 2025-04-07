@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PBP.DataAccess.Models;
 
 namespace PBP.DataAccess.Context;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
@@ -12,9 +14,26 @@ public class ApplicationDbContext : DbContext
     public DbSet<Contact> Contact { get; set; }
     public DbSet<Image> Image { get; set; }
     public DbSet<ContactChangeHistory> ContactChangeHistory { get; set; }
+    public DbSet<ActivityLog> ActivityLog { get; set; }
+    public DbSet<DynamicListItem> DynamicListItem { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<IdentityUserLogin<string>>(entity =>
+        {
+            entity.HasKey(ul => ul.UserId);
+        });
+
+        modelBuilder.Entity<IdentityUserRole<string>>(entity =>
+        {
+            entity.HasKey(ur => new { ur.UserId, ur.RoleId });
+        });
+
+        modelBuilder.Entity<IdentityUserToken<string>>(entity =>
+        {
+            entity.HasKey(ut => new { ut.UserId, ut.LoginProvider, ut.Name });
+        });
+
         modelBuilder.Entity<Contact>()
             .HasIndex(c => c.PhoneNumber)
             .IsUnique();

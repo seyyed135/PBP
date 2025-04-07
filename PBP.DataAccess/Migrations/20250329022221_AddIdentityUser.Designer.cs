@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PBP.DataAccess.Context;
 
@@ -11,9 +12,11 @@ using PBP.DataAccess.Context;
 namespace PBP.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250329022221_AddIdentityUser")]
+    partial class AddIdentityUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,7 +66,7 @@ namespace PBP.DataAccess.Migrations
                     b.ToTable("RoleClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -73,11 +76,6 @@ namespace PBP.DataAccess.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -117,11 +115,7 @@ namespace PBP.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("IdentityUser<string>");
-
-                    b.HasDiscriminator().HasValue("IdentityUser<string>");
-
-                    b.UseTphMappingStrategy();
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -197,32 +191,6 @@ namespace PBP.DataAccess.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("UserTokens");
-                });
-
-            modelBuilder.Entity("PBP.DataAccess.Models.ActivityLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ActivityLog");
                 });
 
             modelBuilder.Entity("PBP.DataAccess.Models.Contact", b =>
@@ -319,24 +287,6 @@ namespace PBP.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Image");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser<string>");
-
-                    b.HasDiscriminator().HasValue("IdentityUser");
-                });
-
-            modelBuilder.Entity("PBP.DataAccess.Models.ActivityLog", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser<string>", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("PBP.DataAccess.Models.Contact", b =>

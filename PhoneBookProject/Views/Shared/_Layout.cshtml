@@ -38,6 +38,22 @@
                             </a>
                         </li>
                     </ul>
+
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            @if (User.Identity!.IsAuthenticated)
+                            {
+                                var user = await UserManager.GetUserAsync(User);
+                                var roles = await UserManager.GetRolesAsync(user!);
+                                <span class="nav-link active">نقش شما : @string.Join(", ", roles)</span>
+                            }
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" asp-controller="Accounts" asp-action="Logout">
+                                خروج از سیستم
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>
