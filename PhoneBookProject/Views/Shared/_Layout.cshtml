@@ -37,6 +37,24 @@
                                 ایجاد مخاطب جدید
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" asp-controller="ActivityLogUsers" asp-action="Index">
+                                فعالیت کاربران
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" asp-controller="DynamicLists" asp-action="Index">
+                                لیست‌های پویا
+                            </a>
+                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link active" asp-controller="DynamicLists" asp-action="Create">
+                                    افزودن به لیست‌ پویا
+                                </a>
+                            </li>
+                        }
                     </ul>
 
                     <ul class="navbar-nav ms-auto">

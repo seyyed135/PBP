@@ -41,7 +41,7 @@ public class AccountsController(UserManager<IdentityUser> userManager, SignInMan
                 await _userManager.AddToRoleAsync(user, "User");
             }
             await _signInManager.SignInAsync(user, isPersistent: false);
-            await _activityLogService.LogActivityAsync(user.Id, "User Registered");
+            await _activityLogService.LogActivityAsync(user.Id, "ثبت نام در سیستم");
             return RedirectToAction(nameof(ContactsController.Index), "Contacts");
         }
 
@@ -71,7 +71,7 @@ public class AccountsController(UserManager<IdentityUser> userManager, SignInMan
 
         var user = await _userManager.GetUserAsync(User);
         if (user != null)
-            await _activityLogService.LogActivityAsync(user.Id, "User logged In");
+            await _activityLogService.LogActivityAsync(user.Id, "وارد شدن به سیستم");
 
         if (result.Succeeded)
         {
@@ -93,7 +93,7 @@ public class AccountsController(UserManager<IdentityUser> userManager, SignInMan
         await _signInManager.SignOutAsync();
 
         if (user != null)
-            await _activityLogService.LogActivityAsync(user.Id, "User logged Out");
+            await _activityLogService.LogActivityAsync(user.Id, "خارج شدن از سیستم");
 
         return RedirectToAction("Login");
     }

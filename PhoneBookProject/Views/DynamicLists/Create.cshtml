@@ -1,0 +1,53 @@
+﻿@model DynamicListItemViewModel
+
+@{
+    ViewData["Title"] = "افزودن به لیست‌ پویا";
+}
+
+<div class="Container p-3">
+
+    <h1 class="mt-4">
+        @ViewData["Title"]
+        &nbsp; <i class="bi bi-node-plus"></i>
+    </h1>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create" method="post">
+                <div class="form-group">
+                    <label asp-for="Category" class="form-label mt-4 required-mark">
+                        دسته بندی
+                    </label>
+                    <input asp-for="Category" class="form-control" />
+                    <span asp-validation-for="Category" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Value" class="form-label mt-4 required-mark">
+                        محتوا
+                    </label>
+                    <input asp-for="Value" class="form-control" />
+                    <span asp-validation-for="Value" class="text-danger"></span>
+                </div>
+                <div class="col-md-5">
+                    <button type="submit" class="btn btn-primary mt-4 w-100">
+                        ذخیره
+                        &nbsp; <i class="bi bi-floppy2"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="mt-4">
+        <a class="btn btn-success no-underline" style="width: 10.5rem;" asp-action="Index">
+            بازگشت به لیست
+            &nbsp; <i class="bi bi-arrow-left"></i>
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

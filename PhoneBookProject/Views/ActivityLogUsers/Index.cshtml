@@ -1,0 +1,34 @@
+﻿@model List<ActivityLog>
+
+@{
+    ViewData["Title"] = "فعالیت کاربران";
+}
+
+<div class="Container p-3">
+    <h1 class="mt-4">
+        @ViewData["Title"]
+        &nbsp; <i class="bi bi-activity"></i>
+    </h1>
+    <hr />
+
+    <table class="table table-striped">
+        <thead>
+            <tr class="table-info">
+                <th>کاربر</th>
+                <th>نوع فعالیت</th>
+                <th>زمان</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var log in Model)
+            {
+                <tr>
+                    <td>@log.User.UserName</td>
+                    <td>@log.Action</td>
+                    <td>@log.Timestamp.ToLocalTime()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

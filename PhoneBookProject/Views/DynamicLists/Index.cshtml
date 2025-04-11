@@ -1,0 +1,88 @@
+﻿@model List<DynamicListItem>
+
+@{
+    ViewData["Title"] = "لیست‌های پویا";
+}
+
+<div class="Container p-3">
+
+    <h1 class="mt-4">
+        @ViewData["Title"]
+        &nbsp; <i class="bi bi-bar-chart-steps"></i>
+    </h1>
+    <hr />
+
+    <div class="row mt-5">
+        <form method="get" asp-action="Index" class="d-flex align-items-center gap-2 flex-wrap">
+            <select class="form-select form-select-md w-auto" name="category" style="min-width: 180px;">
+                <option value="">لطفا انتخاب کنید ...</option>
+                @foreach (var item in (ViewBag.Categories as List<string>) ?? new List<string>())
+                {
+                    <option value="@item" selected="@(item == ViewBag.SelectedCategory)">
+                        @item
+                    </option>
+                }
+            </select>
+            <button type="submit" class="btn btn-primary d-flex align-items-center">
+                جستوجو
+                &nbsp; <i class="bi bi-search"></i>
+            </button>
+        </form>
+    </div>
+
+
+
+    <table class="table table-striped mt-5">
+        <thead>
+            <tr class="table-info">
+                <th>محتوا</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count > 0)
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Value</td>
+                        <td class="text-end">
+                            <form asp-action="Delete" method="post" class="d-inline delete-form">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                @Html.AntiForgeryToken()
+                                <button type="button" class="btn btn-sm btn-danger delete-btn">
+                                    حذف
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(".delete-btn").on("click", function () {
+                const form = $(this).closest("form");
+
+                Swal.fire({
+                    title: 'آیا مطمئن هستید؟',
+                    text: "این عمل قابل بازگشت نیست!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'بله، حذف کن',
+                    cancelButtonText: 'لغو'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+}

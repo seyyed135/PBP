@@ -38,7 +38,7 @@ public class ContactsController(UserManager<IdentityUser> userManager, ActivityL
             viewModel.Contacts = await query.ToListAsync();
             var user = await _userManager.GetUserAsync(User);
             if (user != null)
-                await _activityLogService.LogActivityAsync(user.Id, "User Viewed Contacts");
+                await _activityLogService.LogActivityAsync(user.Id, "مشاهده مخاطبین");
 
             if (viewModel.Contacts.Count > 0)
             {
@@ -65,7 +65,7 @@ public class ContactsController(UserManager<IdentityUser> userManager, ActivityL
 
         var user = await _userManager.GetUserAsync(User);
         if (user != null)
-            await _activityLogService.LogActivityAsync(user.Id, "User Viewed Contact Details");
+            await _activityLogService.LogActivityAsync(user.Id, "مشاهده جزئیات مخاطب");
 
         return View(contact);
     }
@@ -107,7 +107,7 @@ public class ContactsController(UserManager<IdentityUser> userManager, ActivityL
             viewModel.ContactChangeHistorys = await query.ToListAsync();
             var user = await _userManager.GetUserAsync(User);
             if (user != null)
-                await _activityLogService.LogActivityAsync(user.Id, "User Viewed Changes History Contacts");
+                await _activityLogService.LogActivityAsync(user.Id, "مشاهده تاریخچه تغییرات مخاطب");
 
             if (viewModel.ContactChangeHistorys.Count > 0)
             {
@@ -143,7 +143,7 @@ public class ContactsController(UserManager<IdentityUser> userManager, ActivityL
 
         var user = await _userManager.GetUserAsync(User);
         if (user != null)
-            await _activityLogService.LogActivityAsync(user.Id, "User Viewed Gallery");
+            await _activityLogService.LogActivityAsync(user.Id, "مشاهده گالری تصاویر مخاطبین");
 
         return View(GalleryViewModels);
     }
@@ -218,7 +218,7 @@ public class ContactsController(UserManager<IdentityUser> userManager, ActivityL
                 await _unitOfWork.ContactRepository.AddAsync(contact);
                 var user = await _userManager.GetUserAsync(User);
                 if (user != null)
-                    await _activityLogService.LogActivityAsync(user.Id, "User Add Contact");
+                    await _activityLogService.LogActivityAsync(user.Id, "افزودن مخاطب");
                 TempData["success"] = "مخاطب جدید با موفقیت ذخیره شد";
             }
             else
@@ -227,7 +227,7 @@ public class ContactsController(UserManager<IdentityUser> userManager, ActivityL
                 _unitOfWork.ContactRepository.Update(contact);
                 var user = await _userManager.GetUserAsync(User);
                 if (user != null)
-                    await _activityLogService.LogActivityAsync(user.Id, "User Update Contact");
+                    await _activityLogService.LogActivityAsync(user.Id, "ویرایش مخاطب");
                 TempData["success"] = "مخاطب با موفقیت ویرایش شد";
             }
             await _unitOfWork.ContactRepository.SaveAsync();
@@ -269,7 +269,7 @@ public class ContactsController(UserManager<IdentityUser> userManager, ActivityL
 
         var user = await _userManager.GetUserAsync(User);
         if (user != null)
-            await _activityLogService.LogActivityAsync(user.Id, "User Delete Contact");
+            await _activityLogService.LogActivityAsync(user.Id, "حذف مخاطب");
 
         await _unitOfWork.ContactRepository.SaveAsync();
         TempData["success"] = "مخاطب با موفقیت حذف شد";
