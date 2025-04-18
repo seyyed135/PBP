@@ -57,5 +57,8 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 
         modelBuilder.Entity<ContactChangeHistory>()
             .HasIndex(c => c.ChangedTime);
+
+        modelBuilder.Entity<DynamicListItem>()
+            .HasIndex(c => c.Category);
     }
 }

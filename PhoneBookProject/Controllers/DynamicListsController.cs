@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PBP.DataAccess.Context;
 using PBP.DataAccess.Models;
+using PBP.Extensions;
 using PBP.ViewModels;
 
 namespace PBP.Controllers;
@@ -19,21 +21,24 @@ public class DynamicListsController(ApplicationDbContext context, UserManager<Id
     [HttpGet]
     public async Task<IActionResult> Index(string? category)
     {
-        var categories = await _context.Set<DynamicListItem>()
-                                        .Where(d => d.IsActive)
-                                        .Select(d => d.Category)
-                                        .Distinct()
-                                        .ToListAsync();
+        var categoryNames = Enum.GetValues(typeof(CategoryName))
+                     .Cast<CategoryName>()
+                     .Select(c => new SelectListItem
+                     {
+                         Value = c.ToString(),
+                         Text = c.GetDisplayName()
+                     })
+                     .ToList();
 
-        ViewBag.Categories = categories;
+        ViewBag.CategoryNames = categoryNames;
 
         if (!string.IsNullOrEmpty(category))
         {
             var items = await _context.Set<DynamicListItem>()
                                       .Where(d => d.IsActive &&
-                                             (category == null || d.Category == category))
+                                            (string.IsNullOrEmpty(category) || d.Category.ToString() == category))
                                       .ToListAsync();
-           
+
             ViewBag.SelectedCategory = category;
 
             var currentUser = await _userManager.GetUserAsync(User);
@@ -47,13 +52,28 @@ public class DynamicListsController(ApplicationDbContext context, UserManager<Id
 
     [HttpGet]
     [Authorize(Roles = "Admin")]
-    public IActionResult Create() => View();
+    public IActionResult Create()
+    {
+        var categoryNames = Enum.GetValues(typeof(CategoryName))
+                          .Cast<CategoryName>()
+                          .Select(c => new SelectListItem
+                          {
+                              Value = c.ToString(),
+                              Text = c.GetDisplayName()
+                          })
+                          .ToList();
+
+        ViewBag.CategoryNames = categoryNames;
+
+        return View();
+    }
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create(DynamicListItemViewModel viewModel)
-    {
+    {     
         var dynamicListItem = new DynamicListItem();
+
         if (ModelState.IsValid)
         {
             viewModel.UpdateModel(dynamicListItem);

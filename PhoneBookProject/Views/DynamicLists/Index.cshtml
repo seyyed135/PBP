@@ -16,10 +16,10 @@
         <form method="get" asp-action="Index" class="d-flex align-items-center gap-2 flex-wrap">
             <select class="form-select form-select-md w-auto" name="category" style="min-width: 180px;">
                 <option value="">لطفا انتخاب کنید ...</option>
-                @foreach (var item in (ViewBag.Categories as List<string>) ?? new List<string>())
+                @foreach (var item in (ViewBag.CategoryNames as List<SelectListItem>) ?? new List<SelectListItem>())
                 {
-                    <option value="@item" selected="@(item == ViewBag.SelectedCategory)">
-                        @item
+                    <option value="@item.Value" selected="@(item.Value == ViewBag.SelectedCategory?.ToString())">
+                        @item.Text
                     </option>
                 }
             </select>

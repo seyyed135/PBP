@@ -19,7 +19,7 @@
                     <label asp-for="Category" class="form-label mt-4 required-mark">
                         دسته بندی
                     </label>
-                    <input asp-for="Category" class="form-control" />
+                    @Html.DropDownListFor(m => m.Category, ViewBag.CategoryNames as List<SelectListItem>, "لطفا انتخاب کنید ...", new { @class = "form-control" })
                     <span asp-validation-for="Category" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -50,4 +50,14 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        $(document).ready(function() {
+            $('select').on('change', function() {
+                if ($(this).val() !== "") {
+                    $(this).find('option[value=""]').prop('disabled', true);
+                }
+            });
+        });
+    </script>
 }

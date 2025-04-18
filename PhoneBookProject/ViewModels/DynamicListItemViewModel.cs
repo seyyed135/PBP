@@ -5,10 +5,8 @@ namespace PBP.ViewModels;
 
 public class DynamicListItemViewModel
 {
-    [Required(ErrorMessage = "لطفا عنوان دسته بندی را وارد کنید")]
-    [MaxLength(20, ErrorMessage = "عنوان دسته بندی نمی‌تواند بیشتر از 20 کاراکتر باشد")]
-    [MinLength(3, ErrorMessage = "عنوان دسته بندی باید حداقل ۳ کاراکتر باشد")]
-    public string Category { get; set; } = string.Empty;
+    [Required(ErrorMessage = "لطفا عنوان دسته بندی را انتخاب کنید")]
+    public CategoryName Category { get; set; }
 
     [Required(ErrorMessage = "لطفا محتوا را وارد کنید")]
     [MaxLength(100, ErrorMessage = "محتوا نمی‌تواند بیشتر از 50 کاراکتر باشد")]
@@ -16,7 +14,7 @@ public class DynamicListItemViewModel
 
     internal void UpdateModel(DynamicListItem model)
     {
-        model.Category = Category.Trim();
+        model.Category = Category;
         model.Value = Value.Trim();
         model.IsActive = true;
     }
