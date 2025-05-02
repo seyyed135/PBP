@@ -1,4 +1,5 @@
-﻿using PBP.DataAccess.Models;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using PBP.DataAccess.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
@@ -14,10 +15,6 @@ public class ContactViewModel
         Name = contact.Name;
         PhoneNumber = contact.PhoneNumber;
         BirthDate = GregorianDateToPersianString(contact.BirthDate);
-        BloodTypeId = contact.BloodTypeId;
-        PlaceOfBirthId = contact.PlaceOfBirthId;
-        TypeOfSocialNetworkId = contact.TypeOfSocialNetworkId;
-        AgeGroupId = contact.AgeGroupId;
         Image = ConvertToIFormFile(contact.Image?.Data ?? Array.Empty<byte>());
     }
 
@@ -37,13 +34,17 @@ public class ContactViewModel
     [RegularExpression(@"^([۰-۹]{4})/([۰-۹]{2})/([۰-۹]{2})$", ErrorMessage = "تاریخ تولد باید به صورت شمسی و فرمت YYYY/MM/DD باشد.")]
     public string? BirthDate { get; set; }
 
-    public int? BloodTypeId { get; set; }
+    public List<SelectListItem> BloodTypes { get; set; }
+    public string SelectedBloodType { get; set; }
 
-    public int? PlaceOfBirthId { get; set; }
+    public List<SelectListItem> PlaceOfBirths { get; set; }
+    public string SelectedPlaceOfBirth { get; set; }
 
-    public int? TypeOfSocialNetworkId { get; set; }
+    public List<SelectListItem> TypeOfSocialNetworks { get; set; }
+    public string SelectedTypeOfSocialNetwork { get; set; }
 
-    public int? AgeGroupId { get; set; }
+    public List<SelectListItem> AgeGroups { get; set; }
+    public string SelectedAgeGroup { get; set; }
 
     public IFormFile? Image { get; set; }
 
@@ -52,10 +53,10 @@ public class ContactViewModel
         model.Name = Name.Trim();
         model.PhoneNumber = PhoneNumber.Trim();
         model.BirthDate = PersianStringToGregorianDate(BirthDate);
-        model.BloodTypeId = BloodTypeId;
-        model.PlaceOfBirthId = PlaceOfBirthId;
-        model.TypeOfSocialNetworkId = TypeOfSocialNetworkId;
-        model.AgeGroupId = AgeGroupId;
+        model.BloodTypeId = int.Parse(SelectedBloodType);
+        model.PlaceOfBirthId = int.Parse(SelectedPlaceOfBirth);
+        model.TypeOfSocialNetworkId = int.Parse(SelectedTypeOfSocialNetwork);
+        model.AgeGroupId = int.Parse(SelectedAgeGroup);
 
         try
         {

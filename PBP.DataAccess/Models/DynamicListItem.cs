@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PBP.DataAccess.Models;
 
@@ -9,7 +10,8 @@ public class DynamicListItem
     public int Id { get; set; }
 
     [Required]
-    public CategoryName Category { get; set; } 
+    [Column(TypeName = "int")]
+    public CategoryName Category { get; set; }
 
     [Required]
     public string Value { get; set; } = string.Empty;
@@ -20,14 +22,14 @@ public class DynamicListItem
 public enum CategoryName
 {
     [Display(Name = "گروه خونی")]
-    BloodType,
+    BloodType = 1,
 
     [Display(Name = "محل تولد")]
-    PlaceOfBirth,
+    PlaceOfBirth = 2,
 
     [Display(Name = "نوع شبکه اجتماعی")]
-    TypeOfSocialNetwork,
+    TypeOfSocialNetwork = 3,
 
     [Display(Name = "گروه سنی")]
-    AgeGroup,
+    AgeGroup = 4,
 }

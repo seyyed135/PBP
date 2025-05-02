@@ -47,6 +47,30 @@
                     <span asp-validation-for="BirthDate" class="text-danger"></span>
                 </div>
                 <div class="form-group">
+                    <label class="form-label mt-4">
+                        گروه خونی
+                    </label>
+                    @Html.DropDownListFor(m => m.SelectedBloodType, Model.BloodTypes, "لطفا انتخاب کنید ...", new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <label class="form-label mt-4">
+                        محل تولد
+                    </label>
+                    @Html.DropDownListFor(m => m.SelectedPlaceOfBirth, Model.BloodTypes, "لطفا انتخاب کنید ...", new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <label class="form-label mt-4">
+                        نوع شبکه اجتماعی
+                    </label>
+                    @Html.DropDownListFor(m => m.SelectedTypeOfSocialNetwork, Model.BloodTypes, "لطفا انتخاب کنید ...", new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <label class="form-label mt-4 required-mark">
+                        گروه سنی
+                    </label>
+                    @Html.DropDownListFor(m => m.SelectedAgeGroup, Model.BloodTypes, "لطفا انتخاب کنید ...", new { @class = "form-control" })
+                </div>
+                <div class="form-group">
                     <label asp-for="Image" class="form-label mt-4">
                         @Localizer["Image"]
                     </label>
@@ -77,6 +101,16 @@
                 initialValue: false,
                 format: "YYYY/MM/DD",
                 autoClose: true,
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('select').on('change', function() {
+                if ($(this).val() !== "") {
+                    $(this).find('option[value=""]').prop('disabled', true);
+                }
             });
         });
     </script>
