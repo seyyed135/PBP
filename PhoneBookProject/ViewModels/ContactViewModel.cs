@@ -14,6 +14,10 @@ public class ContactViewModel
         Name = contact.Name;
         PhoneNumber = contact.PhoneNumber;
         BirthDate = GregorianDateToPersianString(contact.BirthDate);
+        BloodTypeId = contact.BloodTypeId;
+        PlaceOfBirthId = contact.PlaceOfBirthId;
+        TypeOfSocialNetworkId = contact.TypeOfSocialNetworkId;
+        AgeGroupId = contact.AgeGroupId;
         Image = ConvertToIFormFile(contact.Image?.Data ?? Array.Empty<byte>());
     }
 
@@ -33,6 +37,14 @@ public class ContactViewModel
     [RegularExpression(@"^([۰-۹]{4})/([۰-۹]{2})/([۰-۹]{2})$", ErrorMessage = "تاریخ تولد باید به صورت شمسی و فرمت YYYY/MM/DD باشد.")]
     public string? BirthDate { get; set; }
 
+    public int? BloodTypeId { get; set; }
+
+    public int? PlaceOfBirthId { get; set; }
+
+    public int? TypeOfSocialNetworkId { get; set; }
+
+    public int? AgeGroupId { get; set; }
+
     public IFormFile? Image { get; set; }
 
     internal async Task UpdateModelAsync(Contact model)
@@ -40,6 +52,10 @@ public class ContactViewModel
         model.Name = Name.Trim();
         model.PhoneNumber = PhoneNumber.Trim();
         model.BirthDate = PersianStringToGregorianDate(BirthDate);
+        model.BloodTypeId = BloodTypeId;
+        model.PlaceOfBirthId = PlaceOfBirthId;
+        model.TypeOfSocialNetworkId = TypeOfSocialNetworkId;
+        model.AgeGroupId = AgeGroupId;
 
         try
         {

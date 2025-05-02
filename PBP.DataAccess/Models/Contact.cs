@@ -17,6 +17,18 @@ public class Contact
 
     public DateTime? BirthDate { get; set; }
 
+    public int? BloodTypeId { get; set; }
+    public DynamicListItem? BloodType { get; set; }
+
+    public int? PlaceOfBirthId { get; set; }
+    public DynamicListItem? PlaceOfBirth { get; set; }
+
+    public int? TypeOfSocialNetworkId { get; set; }
+    public DynamicListItem? TypeOfSocialNetwork { get; set; }
+
+    public int? AgeGroupId { get; set; }
+    public DynamicListItem? AgeGroup { get; set; }
+
     public int? ImageId { get; set; }
     public Image? Image { get; set; }
 

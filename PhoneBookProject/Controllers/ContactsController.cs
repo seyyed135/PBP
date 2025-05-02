@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using PBP.DataAccess.Context;
 using PBP.DataAccess.Models;
 using PBP.DataAccess.Repositories;
 using PBP.Extensions;
@@ -11,11 +12,12 @@ using PBP.ViewModels;
 namespace PBP.Controllers;
 
 [Authorize]
-public class ContactsController(UserManager<IdentityUser> userManager, ActivityLogService activityLogService, IUnitOfWork unitOfWork) : Controller
+public class ContactsController(UserManager<IdentityUser> userManager, ActivityLogService activityLogService, IUnitOfWork unitOfWork, ApplicationDbContext context) : Controller
 {
     private readonly UserManager<IdentityUser> _userManager = userManager;
     private readonly ActivityLogService _activityLogService = activityLogService;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly ApplicationDbContext _context = context;
 
     #region See Contacts
 
@@ -156,6 +158,8 @@ public class ContactsController(UserManager<IdentityUser> userManager, ActivityL
     public async Task<IActionResult> Create(int? id)
     {
         var viewModel = new ContactViewModel();
+
+        var dynamicListItems = await _context.Set<DynamicListItem>().ToListAsync();
 
         if (id > 0)
         {
