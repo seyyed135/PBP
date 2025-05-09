@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using PBP.DataAccess.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -16,6 +17,10 @@ public class ContactViewModel
         PhoneNumber = contact.PhoneNumber;
         BirthDate = GregorianDateToPersianString(contact.BirthDate);
         Image = ConvertToIFormFile(contact.Image?.Data ?? Array.Empty<byte>());
+        SelectedBloodType = contact.BloodTypeId.ToString();
+        SelectedPlaceOfBirth = contact.PlaceOfBirthId.ToString();
+        SelectedTypeOfSocialNetwork = contact.TypeOfSocialNetworkId.ToString();
+        SelectedAgeGroup = contact.AgeGroupId.ToString();
     }
 
     public int? Id { get; set; }
@@ -34,17 +39,17 @@ public class ContactViewModel
     [RegularExpression(@"^([۰-۹]{4})/([۰-۹]{2})/([۰-۹]{2})$", ErrorMessage = "تاریخ تولد باید به صورت شمسی و فرمت YYYY/MM/DD باشد.")]
     public string? BirthDate { get; set; }
 
-    public List<SelectListItem> BloodTypes { get; set; }
-    public string SelectedBloodType { get; set; }
+    public List<SelectListItem>? BloodTypes { get; set; }
+    public string? SelectedBloodType { get; set; }
 
-    public List<SelectListItem> PlaceOfBirths { get; set; }
-    public string SelectedPlaceOfBirth { get; set; }
+    public List<SelectListItem>? PlaceOfBirths { get; set; }
+    public string? SelectedPlaceOfBirth { get; set; }
 
-    public List<SelectListItem> TypeOfSocialNetworks { get; set; }
-    public string SelectedTypeOfSocialNetwork { get; set; }
+    public List<SelectListItem>? TypeOfSocialNetworks { get; set; }
+    public string? SelectedTypeOfSocialNetwork { get; set; }
 
-    public List<SelectListItem> AgeGroups { get; set; }
-    public string SelectedAgeGroup { get; set; }
+    public List<SelectListItem>? AgeGroups { get; set; }
+    public string? SelectedAgeGroup { get; set; }
 
     public IFormFile? Image { get; set; }
 
@@ -53,10 +58,10 @@ public class ContactViewModel
         model.Name = Name.Trim();
         model.PhoneNumber = PhoneNumber.Trim();
         model.BirthDate = PersianStringToGregorianDate(BirthDate);
-        model.BloodTypeId = int.Parse(SelectedBloodType);
-        model.PlaceOfBirthId = int.Parse(SelectedPlaceOfBirth);
-        model.TypeOfSocialNetworkId = int.Parse(SelectedTypeOfSocialNetwork);
-        model.AgeGroupId = int.Parse(SelectedAgeGroup);
+        model.BloodTypeId = SelectedBloodType != null ? int.Parse(SelectedBloodType) : null;
+        model.PlaceOfBirthId = SelectedPlaceOfBirth != null ? int.Parse(SelectedPlaceOfBirth) : null;
+        model.TypeOfSocialNetworkId = SelectedTypeOfSocialNetwork != null ? int.Parse(SelectedTypeOfSocialNetwork) : null;
+        model.AgeGroupId = SelectedAgeGroup != null ? int.Parse(SelectedAgeGroup) : null;
 
         try
         {

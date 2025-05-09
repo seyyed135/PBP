@@ -43,4 +43,16 @@ public enum FieldName
 
     [Display(Name = "تصویر")]
     Image,
+
+    [Display(Name = "گروه خونی")]
+    BloodType,
+
+    [Display(Name = "محل تولد")]
+    PlaceOfBirth,
+
+    [Display(Name = "نوع شبکه اجتماعی")]
+    TypeOfSocialNetwork,
+
+    [Display(Name = "گروه سنی")]
+    AgeGroup,
 }

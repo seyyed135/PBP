@@ -85,6 +85,11 @@
                             <td>@item.OldValue</td>
                             <td>@item.NewValue</td>
                         }
+                        @if (item.FieldName == FieldName.BloodType || item.FieldName == FieldName.PlaceOfBirth || item.FieldName == FieldName.TypeOfSocialNetwork || item.FieldName == FieldName.AgeGroup)
+                        {
+                            <td>@item.OldValue</td>
+                            <td>@item.NewValue</td>
+                        }
                         @if (item.FieldName == FieldName.BirthDate)
                         {
                             @if (!string.IsNullOrEmpty(item.OldValue))

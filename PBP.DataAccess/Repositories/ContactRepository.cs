@@ -11,6 +11,10 @@ public class ContactRepository(ApplicationDbContext context) : Repository<Contac
 
     public async Task<Contact?> GetContactByIdWithImageAsync(int id) => await _context.Set<Contact>()
                                                                                         .Include(c => c.Image)
+                                                                                        .Include(c => c.BloodType)
+                                                                                        .Include(c => c.PlaceOfBirth)
+                                                                                        .Include(c => c.TypeOfSocialNetwork)
+                                                                                        .Include(c => c.AgeGroup)
                                                                                         .FirstOrDefaultAsync(c => c.Id == id);
 
     public async Task<IEnumerable<Contact>> GetAllContactsAndImagesAsync() => await _context.Set<Contact>()
@@ -23,6 +27,10 @@ public class ContactRepository(ApplicationDbContext context) : Repository<Contac
         var query = _context.Set<Contact>()
                                 .Include(c => c.Image)
                                 .Include(c => c.ChangesHistory)
+                                .Include(c => c.BloodType)
+                                .Include(c => c.PlaceOfBirth)
+                                .Include(c => c.TypeOfSocialNetwork)
+                                .Include(c => c.AgeGroup)
                                 .AsQueryable();
 
         if (!string.IsNullOrEmpty(searchName))
@@ -76,7 +84,11 @@ public class ContactRepository(ApplicationDbContext context) : Repository<Contac
     public async Task AddChangeHistoryAsync(Contact contact)
     {
         var existingContact = await _context.Set<Contact>()
-                                            .Include(c => c.Image)
+                                            .Include(c => c.Image)                                                                  
+                                            .Include(c => c.BloodType)
+                                            .Include(c => c.PlaceOfBirth)
+                                            .Include(c => c.TypeOfSocialNetwork)
+                                            .Include(c => c.AgeGroup)
                                             .AsNoTracking()
                                             .SingleOrDefaultAsync(c => c.Id == contact.Id);
 
@@ -87,7 +99,13 @@ public class ContactRepository(ApplicationDbContext context) : Repository<Contac
         CheckAndAddChange(changes, contact.Id, FieldName.Name, existingContact.Name, contact.Name);
         CheckAndAddChange(changes, contact.Id, FieldName.PhoneNumber, existingContact.PhoneNumber, contact.PhoneNumber);
         CheckAndAddChange(changes, contact.Id, FieldName.BirthDate, existingContact.BirthDate?.ToString(), contact.BirthDate?.ToString());
-        CheckAndAddChange(changes, contact.Id, FieldName.Image, null, null, existingContact.Image?.Data, contact.Image?.Data);
+        CheckAndAddChange(changes, contact.Id, FieldName.Image, null, null, null, null, existingContact.Image?.Data, contact.Image?.Data);
+
+        CheckAndAddChange(changes, contact.Id, FieldName.BloodType, existingContact.BloodTypeId.ToString(), contact.BloodTypeId.ToString(), existingContact.BloodType?.Value, contact.BloodType?.Value);
+
+        CheckAndAddChange(changes, contact.Id, FieldName.PlaceOfBirth, existingContact.PlaceOfBirthId.ToString(), contact.PlaceOfBirthId.ToString(), existingContact.PlaceOfBirth?.Value, contact.PlaceOfBirth?.Value);
+        CheckAndAddChange(changes, contact.Id, FieldName.TypeOfSocialNetwork, existingContact.TypeOfSocialNetworkId.ToString(), contact.TypeOfSocialNetworkId.ToString(), existingContact.TypeOfSocialNetwork?.Value, contact.TypeOfSocialNetwork?.Value);
+        CheckAndAddChange(changes, contact.Id, FieldName.AgeGroup, existingContact.AgeGroupId.ToString(), contact.AgeGroupId.ToString(), existingContact.AgeGroup?.Value, contact.AgeGroup?.Value);
 
         if (changes.Any())
         {
@@ -100,7 +118,7 @@ public class ContactRepository(ApplicationDbContext context) : Repository<Contac
         }
     }
 
-    private void CheckAndAddChange(List<ContactChangeHistory> changes, int contactId, FieldName fieldName, string? oldValue, string? newValue, byte[]? oldImage = null, byte[]? newImage = null)
+    private void CheckAndAddChange(List<ContactChangeHistory> changes, int contactId, FieldName fieldName, string? oldValue, string? newValue, string? oldDisplay = null, string? newDisplay = null, byte[]? oldImage = null, byte[]? newImage = null)
     {
         if (fieldName == FieldName.Image)
         {
@@ -123,15 +141,30 @@ public class ContactRepository(ApplicationDbContext context) : Repository<Contac
         }
         else if (oldValue != newValue)
         {
-            changes.Add(new ContactChangeHistory
+            if (fieldName == FieldName.BloodType || fieldName == FieldName.PlaceOfBirth || fieldName == FieldName.TypeOfSocialNetwork || fieldName == FieldName.AgeGroup)
             {
-                ContactId = contactId,
-                FieldName = fieldName,
-                OldValue = oldValue,
-                NewValue = newValue,
-                ChangedDate = DateTime.UtcNow.Date,
-                ChangedTime = DateTime.UtcNow.ToString("HH:mm")
-            });
+                changes.Add(new ContactChangeHistory
+                {
+                    ContactId = contactId,
+                    FieldName = fieldName,
+                    OldValue = oldDisplay,
+                    NewValue = newDisplay,
+                    ChangedDate = DateTime.UtcNow.Date,
+                    ChangedTime = DateTime.UtcNow.ToString("HH:mm")
+                });
+            }
+            else
+            {
+                changes.Add(new ContactChangeHistory
+                {
+                    ContactId = contactId,
+                    FieldName = fieldName,
+                    OldValue = oldValue,
+                    NewValue = newValue,
+                    ChangedDate = DateTime.UtcNow.Date,
+                    ChangedTime = DateTime.UtcNow.ToString("HH:mm")
+                });
+            }
         }
     }
 }

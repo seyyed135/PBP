@@ -157,54 +157,33 @@ public class ContactsController(UserManager<IdentityUser> userManager, ActivityL
     [HttpGet]
     public async Task<IActionResult> Create(int? id)
     {
-        //var viewModel = new ContactViewModel();
+        var viewModel = new ContactViewModel();
 
-        //viewModel.BloodTypes = (await _context.Set<DynamicListItem>()
-        //                                            .Where(d => d.IsActive && (int)d.Category == (int)CategoryName.BloodType)
-        //                                            .ToListAsync())
-        //                                            .Select(d => new SelectListItem { Text = d.Value, Value = d.Id.ToString() })
-        //                                            .ToList();
+        var bloodTypes = await _context.Set<DynamicListItem>()
+                                                    .Where(d => d.IsActive && d.Category == CategoryName.BloodType)
+                                                    .Select(d => new SelectListItem { Text = d.Value, Value = d.Id.ToString() })
+                                                    .ToListAsync();
+        viewModel.BloodTypes = bloodTypes;
 
-        //viewModel.PlaceOfBirths = (await _context.Set<DynamicListItem>()
-        //                                            .Where(d => d.IsActive && (int)d.Category == (int)CategoryName.PlaceOfBirth)
-        //                                            .ToListAsync())
-        //                                            .Select(d => new SelectListItem { Text = d.Value, Value = d.Id.ToString() })
-        //                                            .ToList();
+        var placeOfBirths = await _context.Set<DynamicListItem>()
+                                                    .Where(d => d.IsActive && d.Category == CategoryName.PlaceOfBirth)
+                                                    .Select(d => new SelectListItem { Text = d.Value, Value = d.Id.ToString() })
+                                                    .ToListAsync();
+        viewModel.PlaceOfBirths = placeOfBirths;
 
-        //viewModel.TypeOfSocialNetworks = (await _context.Set<DynamicListItem>()
-        //                                            .Where(d => d.IsActive && (int)d.Category == (int)CategoryName.TypeOfSocialNetwork)
-        //                                            .ToListAsync())
-        //                                            .Select(d => new SelectListItem { Text = d.Value, Value = d.Id.ToString() })
-        //                                            .ToList();
+        var typeOfSocialNetworks = await _context.Set<DynamicListItem>()
+                                                   .Where(d => d.IsActive && d.Category == CategoryName.TypeOfSocialNetwork)
+                                                   .Select(d => new SelectListItem { Text = d.Value, Value = d.Id.ToString() })
+                                                   .ToListAsync();
+        viewModel.TypeOfSocialNetworks = typeOfSocialNetworks;
 
-        //viewModel.AgeGroups = (await _context.Set<DynamicListItem>()
-        //                                            .Where(d => d.IsActive && (int)d.Category == (int)CategoryName.AgeGroup)
-        //                                            .ToListAsync())
-        //                                            .Select(d => new SelectListItem { Text = d.Value, Value = d.Id.ToString() })
-        //                                            .ToList();
 
-        var viewModel = new ContactViewModel
-        {
-            BloodTypes = await _context.Set<DynamicListItem>()
-                                        .Where(d => d.IsActive && d.Category == CategoryName.BloodType)
-                                        .Select(d => new SelectListItem { Text = d.Value, Value = d.Id.ToString() })
-                                        .ToListAsync(),
 
-            PlaceOfBirths = await _context.Set<DynamicListItem>()
-                                        .Where(d => d.IsActive && d.Category == CategoryName.PlaceOfBirth)
-                                        .Select(d => new SelectListItem { Text = d.Value, Value = d.Id.ToString() })
-                                        .ToListAsync(),
-
-            TypeOfSocialNetworks = await _context.Set<DynamicListItem>()
-                                        .Where(d => d.IsActive && d.Category == CategoryName.TypeOfSocialNetwork)
-                                        .Select(d => new SelectListItem { Text = d.Value, Value = d.Id.ToString() })
-                                        .ToListAsync(),
-
-            AgeGroups = await _context.Set<DynamicListItem>()
-                                        .Where(d => d.IsActive && d.Category == CategoryName.AgeGroup)
-                                        .Select(d => new SelectListItem { Text = d.Value, Value = d.Id.ToString() })
-                                        .ToListAsync()
-        };
+        var ageGroups = await _context.Set<DynamicListItem>()
+                                                    .Where(d => d.IsActive && d.Category == CategoryName.AgeGroup)
+                                                    .Select(d => new SelectListItem { Text = d.Value, Value = d.Id.ToString() })
+                                                    .ToListAsync();
+        viewModel.AgeGroups = ageGroups;
 
         if (id > 0)
         {
@@ -213,7 +192,13 @@ public class ContactsController(UserManager<IdentityUser> userManager, ActivityL
             if (contact == null)
                 ModelState.AddModelError(string.Empty, $" مخاطب با شناسه {id} پیدا نشد .");
             else
+            {
                 viewModel = new ContactViewModel(contact);
+                viewModel.BloodTypes = bloodTypes;
+                viewModel.PlaceOfBirths = placeOfBirths;
+                viewModel.TypeOfSocialNetworks = typeOfSocialNetworks;
+                viewModel.AgeGroups = ageGroups;
+            }
         }
 
         return View(viewModel);

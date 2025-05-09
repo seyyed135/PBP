@@ -63,6 +63,10 @@
                 <th>@Localizer["Name"]</th>
                 <th>@Localizer["PhoneNumber"]</th>
                 <th>@Localizer["BirthDate"]</th>
+                <th>گروه خونی</th>
+                <th>محل تولد</th>
+                <th>نوع شبکه اجتماعی</th>
+                <th>گروه سنی</th>
                 <th>@Localizer["Image"]</th>
                 <th></th>
             </tr>
@@ -76,6 +80,10 @@
                         <td>@item.Name</td>
                         <td>@item.PhoneNumber</td>
                         <td>@item.BirthDate?.ToString("yyyy/MM/dd")</td>
+                        <td>@item.BloodType?.Value</td>
+                        <td>@item.PlaceOfBirth?.Value</td>
+                        <td>@item.TypeOfSocialNetwork?.Value</td>
+                        <td>@item.AgeGroup?.Value</td>
                         <td>
                             @if (item.Image != null)
                             {

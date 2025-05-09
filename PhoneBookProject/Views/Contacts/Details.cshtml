@@ -23,6 +23,18 @@
 
                     <dt class="col-sm-4">@Localizer["BirthDate"]</dt>
                     <dd class="col-sm-8">@Model.BirthDate?.ToString("yyyy/MM/dd")</dd>
+
+                    <dt class="col-sm-4">گروه خونی</dt>
+                    <dd class="col-sm-8">@Model.BloodType?.Value</dd>
+
+                    <dt class="col-sm-4">محل تولد</dt>
+                    <dd class="col-sm-8">@Model.PlaceOfBirth?.Value</dd>
+
+                    <dt class="col-sm-4">نوع شبکه اجتماعی</dt>
+                    <dd class="col-sm-8">@Model.TypeOfSocialNetwork?.Value</dd>
+
+                    <dt class="col-sm-4">گروه سنی</dt>
+                    <dd class="col-sm-8">@Model.AgeGroup?.Value</dd>
                 </dl>
             </div>
             <div class="col-md-6">

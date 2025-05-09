@@ -56,19 +56,19 @@
                     <label class="form-label mt-4">
                         محل تولد
                     </label>
-                    @Html.DropDownListFor(m => m.SelectedPlaceOfBirth, Model.BloodTypes, "لطفا انتخاب کنید ...", new { @class = "form-control" })
+                    @Html.DropDownListFor(m => m.SelectedPlaceOfBirth, Model.PlaceOfBirths, "لطفا انتخاب کنید ...", new { @class = "form-control" })
                 </div>
                 <div class="form-group">
                     <label class="form-label mt-4">
                         نوع شبکه اجتماعی
                     </label>
-                    @Html.DropDownListFor(m => m.SelectedTypeOfSocialNetwork, Model.BloodTypes, "لطفا انتخاب کنید ...", new { @class = "form-control" })
+                    @Html.DropDownListFor(m => m.SelectedTypeOfSocialNetwork, Model.TypeOfSocialNetworks, "لطفا انتخاب کنید ...", new { @class = "form-control" })
                 </div>
                 <div class="form-group">
                     <label class="form-label mt-4 required-mark">
                         گروه سنی
                     </label>
-                    @Html.DropDownListFor(m => m.SelectedAgeGroup, Model.BloodTypes, "لطفا انتخاب کنید ...", new { @class = "form-control" })
+                    @Html.DropDownListFor(m => m.SelectedAgeGroup, Model.AgeGroups, "لطفا انتخاب کنید ...", new { @class = "form-control" })
                 </div>
                 <div class="form-group">
                     <label asp-for="Image" class="form-label mt-4">
